@@ -1,13 +1,12 @@
 import { z } from "zod";
 
 export const userInfoSchema = z.object({
-  username: z
-    .string()
-    .min(4, { message: "Username must be at least 4 characters long" }),
-  password: z
-    .string()
-    .min(4, { message: "Password must be at least 4 characters long" }),
-  role: z.string().min(4).optional(),
+  username: z.string().min(1, {
+    message: "Username must not be empty",
+  }),
+  password: z.string().min(1, {
+    message: "Password must not be empty",
+  }),
   avatar: z.any().optional(),
 });
 

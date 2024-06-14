@@ -4,15 +4,8 @@ import React, { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userInfoSchema } from "@/schema/userInfo";
-import { registerUser } from "@/pages/actions/registerUser";
+import { registerUser } from "@/pages/actions/userAction";
 import { toast } from "react-hot-toast";
-
-type Inputs = {
-  username: string;
-  password: string;
-  role: string;
-  avatar: FileList | null;
-};
 
 interface IRegisterForm {
   onClose: () => void;
@@ -28,7 +21,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
     handleSubmit,
     formState: { errors },
     setValue, // add setValue
-  } = useForm<Inputs>({
+  } = useForm<UserInputs>({
     defaultValues: {
       username: "",
       password: "",
@@ -37,7 +30,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
     resolver: zodResolver(userInfoSchema),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<UserInputs> = async (data) => {
     const formData = new FormData();
     formData.append("username", data.username);
     formData.append("password", data.password);
@@ -50,6 +43,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
     const result = await registerAction(formData);
     if (result.success) {
       toast.success(result.message);
+      onClose();
     } else {
       toast.error(result.message);
     }

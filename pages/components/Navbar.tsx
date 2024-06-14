@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import logo from "../../public/next.svg";
 import UserCard from "@/pages/components/UserCard";
+import Link from "next/link";
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [showCard, setShowCard] = useState(false);
@@ -87,18 +88,18 @@ export default function Navbar() {
               <li className="py-2 lg:py-0 ">
                 <a
                   className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
-                  href="#"
+                  href="/#"
                 >
                   Home
                 </a>
               </li>
               <li className="py-2 lg:py-0 ">
-                <a
+                <Link
+                  href="/create-post"
                   className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
-                  href="#"
                 >
                   Blog
-                </a>
+                </Link>
               </li>
               <li className="py-2 lg:py-0 ">
                 <a
