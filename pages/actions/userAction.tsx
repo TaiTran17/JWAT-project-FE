@@ -1,7 +1,5 @@
-"use server";
-
 import { userInfoSchema } from "@/schema/userInfo";
-import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 
 export const registerUser = async (newUser: {
   username: string;
@@ -89,13 +87,17 @@ export const loginUser = async (user: {
       };
     }
 
-    //set Cookies
-    cookies().set("Authorization", responseData.metadata.accessToken, {
-      httpOnly: true,
-    });
+    console.log(responseData.metadata.accessToken);
+    console.log("Refresh", responseData.metadata.refreshToken);
 
-    cookies().set("Refresh", responseData.metadata.refreshToken, {
-      httpOnly: true,
+    // Set cookies using js-cookie library
+    Cookies.set("Authorization", responseData.metadata.accessToken, {
+      secure: true, // Adjust as needed for development or HTTPS
+      sameSite: "None", // Add SameSite attribute explicitly
+    });
+    Cookies.set("Refresh", responseData.metadata.refreshToken, {
+      secure: true, // Adjust as needed for development or HTTPS
+      sameSite: "None", // Add SameSite attribute explicitly
     });
 
     return {
