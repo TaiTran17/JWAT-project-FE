@@ -5,10 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
-import router from "next/router";
+import { useRouter } from "next/router";
 
 export const LoginForm = () => {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     register,
@@ -35,9 +35,6 @@ export const LoginForm = () => {
       toast.error(result.message);
     }
   };
-
-  const access = Cookies.get();
-  console.log("Check cookie", access);
 
   const loginAction = async (formData: FormData) => {
     const userLogin = {

@@ -1,18 +1,20 @@
-import Cookies from "js-cookie";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  //Check the cookie
-  const cookie = Cookies.get("Authorization");
+  // Check the cookie from the request
+  const cookie = request.cookies.get("Authorization");
 
   if (!cookie) {
+    // Redirect to the home page if the Authorization cookie is not present
     return NextResponse.redirect(new URL("/#", request.url));
   }
+
+  // Allow the request to proceed if the Authorization cookie is present
+  return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
+// Matching paths configuration
 export const config = {
   matcher: "/Homepage/:path*",
 };
