@@ -1,59 +1,9 @@
 import Link from "next/link";
 import Tag from "../components/Tag";
 import Image from "next/image";
+import { getBlog } from "@/pages/actions/userAction";
+import { useEffect, useState } from "react";
 const MAX_DISPLAY = 5;
-
-const posts = [
-  {
-    slug: "example-post",
-    date: "2024-05-17",
-    title: "Example Post Title1",
-    summary:
-      "This is a short summary of the example post. It gives an overview of the content.",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript"],
-  },
-  {
-    slug: "example-post2 ",
-    date: "2024-05-18",
-    title: "Example Post Title2",
-    summary:
-      "This is a short summary of the example post. It gives an overview of the content.",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript"],
-  },
-  {
-    slug: "example-post3",
-    date: "2024-05-19",
-    title: "Example Post Title3",
-    summary:
-      "This is a short summary of the example post. It gives an overview of the content.",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript"],
-  },
-  {
-    slug: "example-post4",
-    date: "2024-05-20",
-    title: "Example Post Title4",
-    summary:
-      "This is a short summary of the example post. It gives an overview of the content.",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript"],
-  },
-  {
-    slug: "example-post5",
-    date: "2024-05-17",
-    title: "Example Post Title5",
-    summary:
-      "This is a short summary of the example post. It gives an overview of the content.",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript"],
-  },
-  {
-    slug: "example-post6",
-    date: "2024-05-22",
-    title: "Example Post Title6",
-    summary:
-      "This is a short summary of the example post. It gives an overview of the content.",
-    tags: ["Next.js", "Tailwind CSS", "JavaScript"],
-  },
-  // You can add more post objects in this array
-];
 
 const siteMetadata = {
   locale: "en-US",
@@ -64,22 +14,49 @@ function formatDate(dateString: string, locale: string) {
   return new Date(dateString).toLocaleDateString(locale);
 }
 
-export default function PostList() {
+interface pageProps {
+  type: string;
+}
+
+export default function PostList({ type }: pageProps) {
+  const [postss, setPosts] = useState<Blog[]>();
+  const [page, setPage] = useState(1);
+
+  // const fetchBlog = async () => {
+  //   setPosts((await getBlog(type, page)).data); // Update the return type of getBlog
+  // };
+
+  const fetchBlog = async () => {
+    try {
+      const response = await getBlog(type, page);
+      setPosts(response.data); // Cập nhật kiểu trả về của getBlog nếu cần
+      console.log(response.data);
+      console.log("Page", page);
+    } catch (error) {
+      console.error("Error fetching blog:", error);
+    }
+  };
+  useEffect(() => {
+    fetchBlog();
+  }, [page, type]);
+
+  const posts = Array.isArray(postss) ? postss : [];
+
   return (
     <>
       <div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && "No posts found."}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { slug, date, title, summary, tags } = post;
+            const { slug, createdAt, title, description } = post;
             return (
               <li key={slug} className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:gap-8 xl:items-start xl:space-y-0">
                     <dl>
                       <dd className="flex flex-col justify-center items-center text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                        <time dateTime={date}>
-                          {formatDate(date, siteMetadata.locale)}
+                        <time dateTime={createdAt}>
+                          {formatDate(createdAt, siteMetadata.locale)}
                         </time>
                         <Image
                           src={
@@ -103,14 +80,14 @@ export default function PostList() {
                               {title}
                             </Link>
                           </h2>
-                          <div className="flex flex-wrap">
+                          {/* <div className="flex flex-wrap">
                             {tags.map((tag) => (
                               <Tag key={tag} text={tag} />
                             ))}
-                          </div>
+                          </div> */}
                         </div>
                         <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                          {summary}
+                          {description}
                         </div>
                       </div>
                       <div className="text-base font-medium leading-6">
@@ -130,22 +107,37 @@ export default function PostList() {
           })}
         </ul>
       </div>
-      {posts.length > MAX_DISPLAY && (
-        <div className="flex justify-end text-base font-medium leading-6">
-          <Link
-            href="/blog"
+      {page > 1 && (
+        <div className="flex justify-right text-base font-medium leading-6">
+          <button
+            onClick={() => setPage((prevPage) => prevPage - 1)}
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label="All posts"
           >
-            All Posts &rarr;
-          </Link>
+            &larr; back
+          </button>
         </div>
       )}
-      {/* //   {siteMetadata.newsletter?.provider && (
-    //     <div className="flex items-center justify-center pt-4">
-    //       <NewsletterForm />
-    //     </div>
-    //   )} */}
+      <div className="flex justify text-base font-medium leading-6">
+        Page: {page}
+      </div>
+
+      {posts.length && (
+        <div className="flex justify-end text-base font-medium leading-6">
+          <button
+            onClick={() => setPage((prevPage) => prevPage + 1)}
+            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            aria-label="All posts"
+          >
+            Next &rarr;
+          </button>
+        </div>
+      )}
+      {/* {siteMetadata.newsletter?.provider && (
+        <div className="flex items-center justify-center pt-4">
+          <NewsletterForm />
+        </div>
+      )} */}
     </>
   );
 }

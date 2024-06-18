@@ -7,7 +7,7 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
   return (
     <>
       <UserInfo />
-      <PostList />
+      <PostList type={"company"} />
     </>
   );
 };

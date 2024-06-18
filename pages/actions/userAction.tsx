@@ -112,3 +112,35 @@ export const loginUser = async (user: {
     };
   }
 };
+
+export const getBlog = async (type: string, page: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/blog?type=${type}&page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get blog",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get blog",
+    };
+  }
+};

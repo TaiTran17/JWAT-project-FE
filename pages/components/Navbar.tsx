@@ -89,9 +89,9 @@ export default function Navbar() {
               <li className="py-2 lg:py-0 ">
                 <a
                   className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
-                  href="/#"
+                  href="/company"
                 >
-                  Home
+                  Company
                 </a>
               </li>
               <li className="py-2 lg:py-0 ">
@@ -105,10 +105,18 @@ export default function Navbar() {
               <li className="py-2 lg:py-0 ">
                 <a
                   className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
-                  href="#"
+                  href="/project"
                 >
                   Projects
                 </a>
+              </li>
+              <li className="py-2 lg:py-0 ">
+                <Link
+                  href="/team"
+                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
+                >
+                  Team
+                </Link>
               </li>
               <li className="py-2 lg:py-0 ">
                 <Logout />

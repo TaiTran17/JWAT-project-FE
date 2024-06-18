@@ -30,7 +30,7 @@ export const LoginForm = () => {
     const result = await loginAction(formData);
     if (result.success) {
       toast.success(result.message);
-      router.push("/Homepage");
+      router.push("/company");
     } else {
       toast.error(result.message);
     }

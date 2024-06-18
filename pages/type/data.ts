@@ -3,3 +3,16 @@ type UserInputs = {
   password: string;
   avatar?: FileList | null;
 };
+
+type Blog = {
+  createdAt: string;
+  createdBy: string;
+  description: string;
+  id: string;
+  isDeleted: boolean;
+  thumbnail: string;
+  title: string;
+  type: string;
+  updatedAt: string;
+  updatedBy: string;
+};
