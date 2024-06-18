@@ -81,7 +81,9 @@ export default function PostList({ type }: pageProps) {
                             </Link>
                           </h2>
                           <div className="flex flex-wrap">
-                            <Tag text={topic.topic_name} />
+                            {type != "company" && (
+                              <Tag text={topic.topic_name} />
+                            )}
                           </div>
                         </div>
                         <div className="prose max-w-none text-gray-500 dark:text-gray-400">
