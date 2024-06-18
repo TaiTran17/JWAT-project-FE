@@ -15,4 +15,16 @@ type Blog = {
   type: string;
   updatedAt: string;
   updatedBy: string;
+  topic: Topic;
+};
+
+type Topic = {
+  createdAt: string;
+  createdBy: string;
+  id: string;
+  isDeleted: boolean;
+  topic_name: string;
+  type: string;
+  updatedAt: string;
+  updatedBy: string;
 };
