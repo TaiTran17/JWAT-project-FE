@@ -27,6 +27,8 @@ export const registerUser = async (newUser: {
     formData.append("password", password);
     formData.append("avatar", avatar);
 
+    console.log("Check user", formData);
+
     const response = await fetch("http://localhost:3000/auth/signup", {
       method: "POST",
       body: formData,
@@ -44,7 +46,7 @@ export const registerUser = async (newUser: {
       success: true,
       data: responseData,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       error: error.message || "An error occurred during sign up",
     };
@@ -93,11 +95,13 @@ export const loginUser = async (user: {
     // Set cookies using js-cookie library
     Cookies.set("Authorization", responseData.metadata.accessToken, {
       secure: true, // Adjust as needed for development or HTTPS
-      sameSite: "None", // Add SameSite attribute explicitly
+      sameSite: "strict", // Add SameSite attribute explicitly,
+      expires: 1 / 24,
     });
     Cookies.set("Refresh", responseData.metadata.refreshToken, {
       secure: true, // Adjust as needed for development or HTTPS
-      sameSite: "None", // Add SameSite attribute explicitly
+      sameSite: "strict", // Add SameSite attribute explicitly
+      expires: 7,
     });
 
     return {

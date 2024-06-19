@@ -60,3 +60,11 @@ type User = {
   username: string;
   avatar: string;
 };
+
+type blogInputs = {
+  title: string;
+  description: string;
+  type: string;
+  topic: string;
+  thumbnail: FileList | null;
+};
