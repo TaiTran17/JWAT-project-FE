@@ -15,6 +15,12 @@ export default function UserCard() {
         <span className="text-sm text-gray-500 dark:text-gray-400">
           Visual Designer
         </span>
+        <a
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
+          href="/notedsection"
+        >
+          Noted Section
+        </a>
       </div>
     </div>
   );

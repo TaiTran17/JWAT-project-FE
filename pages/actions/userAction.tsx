@@ -335,3 +335,104 @@ export const noteSection = async (id: string) => {
     };
   }
 };
+
+export const addComment = async (comment: {
+  comment: string;
+  blog: string;
+}) => {
+  try {
+    const response = await fetch("http://localhost:3000/comment/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + Cookies.get("Authorization"),
+      },
+      body: JSON.stringify(comment),
+    });
+
+    console.log(JSON.stringify(comment));
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to add comment",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during add comment",
+    };
+  }
+};
+
+export const getNotedSections = async (page: number) => {
+  try {
+    const response = await fetch(`http://localhost:3000/note?page=${page}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + Cookies.get("Authorization"),
+      },
+    });
+
+    const responseData = await response.json();
+
+    const sections = responseData.map((item: any) => item.section);
+    console.log(sections);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get noted sections",
+      };
+    }
+
+    return {
+      success: true,
+      data: sections,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get noted sections",
+    };
+  }
+};
+
+export const removeNote = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/note/delete?section_id=${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to remove note",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during remove note",
+    };
+  }
+};
