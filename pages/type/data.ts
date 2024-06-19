@@ -28,3 +28,11 @@ type Topic = {
   updatedAt: string;
   updatedBy: string;
 };
+
+type blogInputs = {
+  title: string;
+  description: string;
+  type: string;
+  topic: string;
+  thumbnail: FileList | null;
+};
