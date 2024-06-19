@@ -144,3 +144,160 @@ export const getBlog = async (type: string, page: number) => {
     };
   }
 };
+
+export const getBlogDetail = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/blog/getbyBlogId?blog_id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get blog detail",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get blog detail",
+    };
+  }
+};
+
+export const getSectionByBlogId = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/section?blog_id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get section",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get section",
+    };
+  }
+};
+
+export const getImagesBySectionId = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/images?section_id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get images",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get images",
+    };
+  }
+};
+
+export const getCommentsByBlogId = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/comment/getbyblog?blog_id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get comments",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get comments",
+    };
+  }
+};
+
+export const getUserInfo = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3000/user?user_id=${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + Cookies.get("Authorization"),
+      },
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get user info",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get user info",
+    };
+  }
+};

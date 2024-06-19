@@ -30,8 +30,8 @@ export default function PostList({ type }: pageProps) {
     try {
       const response = await getBlog(type, page);
       setPosts(response.data); // Cập nhật kiểu trả về của getBlog nếu cần
-      console.log(response.data);
-      console.log("Page", page);
+      // console.log(response.data);
+      // console.log("Page", page);
     } catch (error) {
       console.error("Error fetching blog:", error);
     }
@@ -48,7 +48,7 @@ export default function PostList({ type }: pageProps) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && "No posts found."}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { topic, createdAt, title, description } = post;
+            const { topic, createdAt, title, description, id } = post;
             return (
               <li key={type} className="py-12">
                 <article>
@@ -92,9 +92,9 @@ export default function PostList({ type }: pageProps) {
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link
-                          href={`/blog/${type}`}
+                          href={`/blog/${id}`}
                           className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                          aria-label={`Read more: "${title}"`}
+                          aria-label={`Read more: "${id}"`}
                         >
                           Read more &rarr;
                         </Link>
