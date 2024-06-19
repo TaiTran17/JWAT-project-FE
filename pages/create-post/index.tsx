@@ -12,11 +12,7 @@ interface FormData {
 
 const IndexPage: NextPage & { getLayout?: boolean } = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
+  const [formData, setFormData] = useState<FormData>({});
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
@@ -32,7 +28,10 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
             Blog information
           </li>
           <li className={`step ${step >= 2 ? "step-primary" : ""}`}>
-            Choose plan
+            Add Section
+          </li>
+          <li className={`step ${step >= 3 ? "step-primary" : ""}`}>
+            Modify Section
           </li>
         </ul>
       </div>

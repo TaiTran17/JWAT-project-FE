@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const typeBlogOptions = ["Company", "Team", "Project"] as const;
+const typeBlogOptions = ["company", "team", "project"] as const;
 
 type BlogOption = (typeof typeBlogOptions)[number];
 
 export const mappedTypeBlogOptions: { [key in BlogOption]: string } = {
-  Company: "Company",
-  Team: "Team",
-  Project: "Project",
+  company: "Company",
+  team: "Team",
+  project: "Project",
 };
 
 export const blogInfoSchema = z.object({

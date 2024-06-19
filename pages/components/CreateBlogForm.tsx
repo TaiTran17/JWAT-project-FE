@@ -10,13 +10,16 @@ import { createBlog } from "@/pages/actions/blogACtion";
 
 interface IProp {
   nextStep: () => void;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const CreateBlogForm: React.FC<IProp> = ({ nextStep }) => {
+const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [topics, setTopics] = useState([]);
+  const [newBlog, setNewBlog] = useState([]);
+  const [isTopicDisabled, setIsTopicDisabled] = useState(false);
 
   const handleClose = () => {
     setSelectedImage(null);
@@ -68,7 +71,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep }) => {
 
   // Create topicOptions array
   const topicOptions = topics.map((topic: any) => (
-    <option value={topic.topic_id} key={topic.topic_id}>
+    <option value={topic.id} key={topic.id}>
       {topic.topic_name}
     </option>
   ));
@@ -86,6 +89,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep }) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<blogInputs>({
     defaultValues: {
       title: "",
@@ -96,6 +100,16 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep }) => {
     },
     resolver: zodResolver(blogInfoSchema),
   });
+
+  const watchType = watch("type");
+
+  useEffect(() => {
+    if (watchType === "company") {
+      setIsTopicDisabled(true);
+    } else {
+      setIsTopicDisabled(false);
+    }
+  }, [watchType]);
 
   const onSubmit: SubmitHandler<blogInputs> = async (data) => {
     console.log("Form Data:", data); // Check if data contains expected values
@@ -114,35 +128,16 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep }) => {
     formData.append("type", data.type);
     formData.append("thumbnail", selectedFile); // Append the File object itself
 
-    const result = await createBlogAction(formData);
+    const result = await createBlog(formData);
+    console.log("Check blog", result);
     if (result.success) {
+      setNewBlog(result.newBlog.data);
+      setFormData(result.newBlog.data); // Pass newBlog data to setFormData
       toast.success(result.message);
+      nextStep(); // Move to the next step
+      nextStep();
     } else {
       toast.error(result.message);
-    }
-  };
-
-  const createBlogAction = async (formData: FormData) => {
-    try {
-      console.log("data before call API", formData);
-      const accessToken = Cookie.get("Authorization");
-      const response = await fetch("http://localhost:3000/blog/create", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      });
-      const responseData = await response.json();
-      console.log(responseData);
-      return responseData;
-    } catch (error) {
-      console.error("Error creating blog:", error);
-      return {
-        success: false,
-        message: error.response?.data?.message || "Error creating blog",
-      };
     }
   };
 
@@ -170,6 +165,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep }) => {
             id="topic"
             className=" py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
             {...register("topic")}
+            disabled={isTopicDisabled} // Disable based on state
           >
             {topicOptions}
           </select>

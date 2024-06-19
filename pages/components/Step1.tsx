@@ -14,8 +14,8 @@ interface FormData {
 }
 
 const Step1: React.FC<StepProps> = ({ formData, setFormData, nextStep }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, firstName: e.target.value });
+  const handleSetFormData = (data: any) => {
+    setFormData(data);
   };
 
   return (
@@ -49,7 +49,7 @@ const Step1: React.FC<StepProps> = ({ formData, setFormData, nextStep }) => {
             </div>
           </div>
 
-          <CreateBlogForm nextStep={nextStep} />
+          <CreateBlogForm nextStep={nextStep} setFormData={handleSetFormData} />
         </div>
       </div>
     </>
