@@ -1,4 +1,4 @@
-import { blogInfoSchema, mappedTypeBlogOptions } from "@/schema/blogInfo";
+import { captionSchema } from "@/schema/blogInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -6,7 +6,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 const axios = require("axios");
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
-import { createBlog } from "@/pages/actions/blogACtion";
 import SectionModal from "@/pages/components/SectionModal";
 
 interface IProp {
@@ -23,6 +22,54 @@ const CreateBlogForm: React.FC<IProp> = ({
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sections, setSections] = useState<number[]>([]); // State to manage sections
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(captionSchema),
+  });
+
+  console.log("FormData", formData.id);
+
+  const addSectionBlog = async (data: { caption: string }) => {
+    try {
+      const accessToken = Cookie.get("Authorization");
+      console.log("Check data", data.caption);
+
+      const response = await axios.post(
+        "http://localhost:3000/section/create",
+        {
+          blog_id: formData.id,
+          caption: data.caption,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json", // Changed to application/json
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        const newSectionId = response.data.id;
+        setSections([...sections, newSectionId]);
+        setValue("caption", ""); // Clear the input field
+        toast.success("Section added successfully");
+      } else {
+        toast.error("Failed to add section");
+      }
+    } catch (error) {
+      console.error("Error response:", error.response); // Log the error response
+      if (error.response) {
+        toast.error(`Error: ${error.response.data.message}`);
+      } else {
+        toast.error("Error adding section");
+      }
+    }
+  };
 
   const handleCancel = () => {
     router.push("/Homepage");
@@ -72,22 +119,31 @@ const CreateBlogForm: React.FC<IProp> = ({
               <h1 className="text-center mt-10 text-4xl font-bold">
                 Add sections
               </h1>
-              <div
-                id="section"
-                className="flex items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500"
-              >
-                <div className="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
-                  <input
-                    className="bg-gray-100 outline-none"
-                    type="text"
-                    placeholder="Article name or keyword..."
-                  />
-                </div>
 
-                <div className="bg-green-400 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
-                  <button>Add</button>
+              <form onSubmit={handleSubmit(addSectionBlog)}>
+                <div
+                  id="section"
+                  className="flex items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500"
+                >
+                  <div className="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
+                    <input
+                      className="bg-gray-100 outline-none"
+                      type="text"
+                      placeholder="Article name or keyword..."
+                      {...register("caption")}
+                    />
+                    {errors.caption && (
+                      <span className="text-red-500">
+                        {errors.caption.message}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="bg-green-400 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                    <button type="submit">Add</button>
+                  </div>
                 </div>
-              </div>
+              </form>
 
               {sections.map((sectionId) => (
                 <div
@@ -122,7 +178,7 @@ const CreateBlogForm: React.FC<IProp> = ({
                   </div>
                   <div className="bg-red-600 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                     <button onClick={() => deleteSection(sectionId)}>
-                      Delelte
+                      Delete
                     </button>
                   </div>
                 </div>
