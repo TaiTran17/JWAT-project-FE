@@ -16,10 +16,6 @@ const siteMetadata = {
 export default function Blog({ blog_id }: PostProps) {
   const [blog, setBlog] = useState<Blog>();
 
-  // const fetchBlog = async () => {
-  //   setPosts((await getBlog(type, page)).data); // Update the return type of getBlog
-  // };
-
   const fetchBlog = async () => {
     try {
       const response = await getBlogDetail(blog_id);

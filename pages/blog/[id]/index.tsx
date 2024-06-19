@@ -3,20 +3,24 @@ import BlogHeader from "@/pages/components/BlogHeader";
 import Navbar from "@/pages/components/Navbar";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Section from "@/pages/components/Post/section";
 import Comment from "@/pages/components/Post/comment";
+import { getBlogDetail } from "@/pages/actions/userAction";
 
 const IndexPage: NextPage & { getLayout?: boolean } = () => {
   const router = useRouter();
-  const { slug } = router.query;
-  return (
-    <>
-      <Blog blog_id={`${slug}`}></Blog>
-      <Section blog_id={`${slug}`}></Section>
-      <Comment blog_id={`${slug}`}></Comment>
-    </>
-  );
+
+  const { id } = router.query;
+  if (id) {
+    return (
+      <>
+        <Blog blog_id={`${id}`}></Blog>
+        <Section blog_id={`${id}`}></Section>
+        <Comment blog_id={`${id}`}></Comment>
+      </>
+    );
+  }
 };
 
 IndexPage.getLayout = true;

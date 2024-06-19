@@ -301,3 +301,37 @@ export const getUserInfo = async (id: string) => {
     };
   }
 };
+
+export const noteSection = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/note?section_id=${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + Cookies.get("Authorization"),
+        },
+        body: JSON.stringify({ id }),
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to note section",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during note section",
+    };
+  }
+};

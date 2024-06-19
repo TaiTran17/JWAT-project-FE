@@ -1,6 +1,7 @@
-import { getSectionByBlogId } from "@/pages/actions/userAction";
+import { getSectionByBlogId, noteSection } from "@/pages/actions/userAction";
 import { useEffect, useState } from "react";
 import Image from "./image";
+import toast from "react-hot-toast";
 
 interface PostProps {
   blog_id: string;
@@ -16,9 +17,7 @@ export default function Section({ blog_id }: PostProps) {
   const fetchSections = async () => {
     try {
       const response = await getSectionByBlogId(blog_id);
-      setSections(response.data); // Cập nhật kiểu trả về của getBlog nếu cần
-      // console.log(response.data);
-      // console.log("Page", page);
+      setSections(response.data);
     } catch (error) {
       console.error("Error fetching blog:", error);
     }
@@ -26,6 +25,15 @@ export default function Section({ blog_id }: PostProps) {
   useEffect(() => {
     fetchSections();
   }, [blog_id]);
+
+  const handleNote = async (selectedSection: string) => {
+    try {
+      const response = await noteSection(selectedSection);
+      toast.success("Note added successfully.");
+    } catch (error) {
+      console.error("Error note section:", error);
+    }
+  };
 
   const sectionList = Array.isArray(sections) ? sections : [];
 
@@ -42,6 +50,7 @@ export default function Section({ blog_id }: PostProps) {
                   {caption}
                 </div>
                 <Image id={id} />
+                <button onClick={() => handleNote(id)}>Add Note</button>
               </li>
             );
           })}
