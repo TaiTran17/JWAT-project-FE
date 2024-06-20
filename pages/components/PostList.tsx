@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Tag from "../components/Tag";
 import Image from "next/image";
-import { getBlog } from "@/pages/actions/userAction";
+import { getBlog } from "@/pages/actions/blogACtion";
 import { useEffect, useState } from "react";
 const MAX_DISPLAY = 5;
 
