@@ -1,4 +1,4 @@
-import { getSectionByBlogId, noteSection } from "@/pages/actions/userAction";
+import { getSectionByBlogId, noteSection } from "@/pages/actions/sectionAction";
 import { useEffect, useState } from "react";
 import Image from "./image";
 import toast from "react-hot-toast";
