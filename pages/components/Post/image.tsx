@@ -1,4 +1,4 @@
-import { getImagesBySectionId } from "@/pages/actions/userAction";
+import { getImagesBySectionId } from "@/pages/actions/imageAction";
 import { useEffect, useState } from "react";
 
 interface PostProps {
