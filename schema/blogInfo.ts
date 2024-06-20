@@ -18,3 +18,7 @@ export const blogInfoSchema = z.object({
   }),
   topic: z.string().optional(),
 });
+
+export const captionSchema = z.object({
+  caption: z.string().min(1, { message: "Caption is required" }),
+});
