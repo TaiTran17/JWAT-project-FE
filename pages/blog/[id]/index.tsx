@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Section from "@/pages/components/Post/section";
 import Comment from "@/pages/components/Post/comment";
-import { getBlogDetail } from "@/pages/actions/userAction";
 
 const IndexPage: NextPage & { getLayout?: boolean } = () => {
   const router = useRouter();
