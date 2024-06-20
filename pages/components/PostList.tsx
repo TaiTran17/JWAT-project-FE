@@ -48,7 +48,8 @@ export default function PostList({ type }: pageProps) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && "No posts found."}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { topic, createdAt, title, description, id } = post;
+            const { topic, createdAt, title, description, id, thumbnail } =
+              post;
             return (
               <li key={type} className="py-12">
                 <article>
@@ -59,9 +60,7 @@ export default function PostList({ type }: pageProps) {
                           {formatDate(createdAt, siteMetadata.locale)}
                         </time>
                         <Image
-                          src={
-                            "https://images.photowall.com/products/42556/summer-landscape-with-river.jpg?h=699&q=85"
-                          }
+                          src={thumbnail}
                           alt={""}
                           width={500}
                           height={500}
