@@ -87,6 +87,14 @@ export default function Navbar() {
           <nav>
             <ul className="text-xl text-center items-center gap-x-5 pt-4 md:gap-x-4 lg:text-lg lg:flex lg:pt-0">
               <li className="py-2 lg:py-0 ">
+                <Link
+                  href="/create-post"
+                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
+                >
+                  Create Blog
+                </Link>
+              </li>
+              <li className="py-2 lg:py-0 ">
                 <a
                   className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
                   href="/company"
@@ -94,14 +102,7 @@ export default function Navbar() {
                   Company
                 </a>
               </li>
-              <li className="py-2 lg:py-0 ">
-                <Link
-                  href="/create-post"
-                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
-                >
-                  Blog
-                </Link>
-              </li>
+
               <li className="py-2 lg:py-0 ">
                 <a
                   className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"

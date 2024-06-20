@@ -1,8 +1,5 @@
-import {
-  addComment,
-  getCommentsByBlogId,
-  getUserInfo,
-} from "@/pages/actions/userAction";
+import { addComment, getCommentsByBlogId } from "@/pages/actions/commentAction";
+import { getUserInfo } from "@/pages/actions/userAction";
 import { useEffect, useState } from "react";
 
 function formatDate(dateString: string, locale: string) {
