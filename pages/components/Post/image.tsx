@@ -39,7 +39,7 @@ export default function Image({ id }: PostProps) {
         <div className="w-full flex flex-col justify-center items-center">
           <div
             id="indicators-carousel"
-            className="relative w-full bg-slate-300"
+            className="relative w-full"
             data-carousel="static"
           >
             <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
@@ -48,15 +48,6 @@ export default function Image({ id }: PostProps) {
                 return (
                   <>
                     <div>
-                      {/* <div
-                        className="hidden duration-700 ease-in-out"
-                        data-carousel-item="active"
-                      ></div> */}
-                      {/* <img
-                        src={image.toString()}
-                        className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-                        alt="..."
-                      /> */}
                       <img
                         src={ImagesList[currentIndex].toString()}
                         className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"

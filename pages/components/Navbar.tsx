@@ -3,13 +3,28 @@ import logo from "../../public/next.svg";
 import UserCard from "@/pages/components/UserCard";
 import Link from "next/link";
 import Logout from "@/pages/components/Logout";
+import { getCurrentUser, getUserInfo } from "../actions/userAction";
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [showCard, setShowCard] = useState(false);
+  const [userInfos, setUserInfos] = useState<User>();
 
   const toggleShowCard = () => {
     setShowCard((prev) => !prev);
   };
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await getCurrentUser();
+      const userInfo = response.data;
+      setUserInfos(userInfo);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -18,20 +33,23 @@ export default function Navbar() {
 
     return () => clearInterval(interval); // Clean up on unmount
   }, []);
+
   return (
     <>
       <nav className="lg:px-16 px-6 bg-white shadow-md flex flex-wrap items-center lg:py-0 py-2 sticky top-0">
         <img src={logo} alt="" />
         <div className="flex-1 flex justify-between items-center">
-          <a href="/" className="flex text-lg font-semibold">
+          <a
+            href="https://www.cyberlogitec.com.vn/"
+            className="flex text-lg font-semibold"
+          >
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSP1I9j33qxt6ehEwRiFdbW_AZv3MjuzUbQg&s"
-              width="50"
-              height="50"
-              className="p-2"
+              src="https://res.cloudinary.com/de22izcfb/image/upload/v1718901618/xq1ssil2nujdyokgbmpz.png"
+              width="75"
+              height="75"
+              className="p-1"
               alt="Rz Codes Logo"
             />
-            <div className="mt-3 text-red-600">Cyberlogictec</div>
           </a>
         </div>
         <div className="flex-1 flex justify-between items-center">
@@ -41,17 +59,19 @@ export default function Navbar() {
               className="cursor-pointer flex items-center"
             >
               <img
-                src="https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png?f=webp&w=256"
+                // src="https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png?f=webp&w=256"
+                src={userInfos?.avatar}
                 width="50"
                 height="50"
-                className="p-2 "
+                //className="p-2 "
+                className="w-10 rounded-full"
                 alt="Rz Codes Logo"
                 data-popover-target="profile-menu"
                 onClick={toggleShowCard}
                 data-dropdown-toggle="dropdown"
               />
               <div
-                className={`mt-3 text-red-600 transition-all duration-100 transform ${
+                className={`ml-2 mt-0 text-blue-900 transition-all duration-100 transform ${
                   isVisible ? "animate-slideInFromTop" : "animate-slideOutToTop"
                 }`}
               >
@@ -89,14 +109,14 @@ export default function Navbar() {
               <li className="py-2 lg:py-0 ">
                 <Link
                   href="/create-post"
-                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
+                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
                 >
                   Create Blog
                 </Link>
               </li>
               <li className="py-2 lg:py-0 ">
                 <a
-                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
+                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
                   href="/company"
                 >
                   Company
@@ -105,7 +125,7 @@ export default function Navbar() {
 
               <li className="py-2 lg:py-0 ">
                 <a
-                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
+                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
                   href="/project"
                 >
                   Projects
@@ -114,7 +134,7 @@ export default function Navbar() {
               <li className="py-2 lg:py-0 ">
                 <Link
                   href="/team"
-                  className="text-red-600 hover:pb-4 hover:border-b-4 hover:border-yellow-400"
+                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
                 >
                   Team
                 </Link>

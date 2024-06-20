@@ -12,6 +12,7 @@ export const getSectionByBlogId = async (id: string) => {
       }
     );
 
+    console.log("Check response", response);
     if (response?.error) {
       return {
         success: false,
