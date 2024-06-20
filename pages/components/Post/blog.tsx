@@ -1,4 +1,4 @@
-import { getBlogDetail } from "@/pages/actions/userAction";
+import { getBlogDetail } from "@/pages/actions/blogACtion";
 import { useEffect, useState } from "react";
 
 interface PostProps {
