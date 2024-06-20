@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
         <Navbar />
       </div>
       <SectionContainer>
-        <div className="min-h-screen flex-col justify-between font-sans">
+        <div className="min-h-screen flex flex-col justify-between font-sans">
           {/* <SearchProvider searchConfig={siteMetadata.search as SearchConfig}> */}
           <main className="mb-auto">{children}</main>
           {/* </SearchProvider> */}

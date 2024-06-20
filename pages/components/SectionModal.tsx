@@ -1,13 +1,14 @@
-import { useRouter } from "next/router";
+import { addImageSection } from "@/pages/actions/sectionAction";
 import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
+  section: { id: string; caption: string } | null; // Define the type for section prop
 }
 
-const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
-  const router = useRouter();
+const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose, section }) => {
   const [files, setFiles] = useState<File[]>([]);
   const hiddenFileInput = useRef<HTMLInputElement | null>(null);
 
@@ -15,6 +16,35 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
     const newFiles = event.target.files;
     if (newFiles) {
       setFiles((prevFiles) => [...prevFiles, ...Array.from(newFiles)]);
+    }
+  };
+
+  const uploadImages = async () => {
+    if (section && files.length > 0) {
+      const formData = new FormData();
+      formData.append("section_id", section.id.toString());
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      try {
+        const result = await addImageSection(formData, section.id);
+        if (result.success) {
+          toast.success(result.message);
+          onClose(); // Close modal or perform any necessary action
+          setFiles([]); // Reset files state to empty array
+          console.log("Check res", result);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error("Error uploading images:", error);
+        // Handle or propagate the error as needed
+        toast.error("Error uploading images");
+      }
+    } else {
+      console.error("Section or files are missing.");
+      toast.error("Section or files are missing.");
     }
   };
 
@@ -26,10 +56,6 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
 
   const handleDelete = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-  };
-
-  const handleCancel = () => {
-    router.push("/Homepage");
   };
 
   if (!isOpen) return null;
@@ -45,8 +71,8 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
             id="title"
             className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
             type="text"
-            placeholder="Caption"
-            // {...register("title")}
+            value={section?.caption}
+            readOnly
           />
         </div>
         <section className="overflow-auto p-8 w-full h-full flex flex-col">
@@ -140,9 +166,9 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
           </button>
           <button
             className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
-            onClick={onClose}
+            onClick={uploadImages}
           >
-            Finish
+            Upload
           </button>
         </div>
       </div>

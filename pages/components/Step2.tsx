@@ -22,8 +22,8 @@ const Step2: React.FC<StepProps> = ({
   console.log("Check data step 2:", formData);
 
   return (
-    <div className="flex  w-full h-screen border-black items-center justify-center  mt-36 mb-32">
-      <div className="grid bg-white rounded-lg shadow-xl w-11/12 md:w-9/12 lg:w-3/4">
+    <div className="flex  w-full h-fit border-black items-center justify-center  mt-36 mb-32">
+      <div className="grid bg-white rounded-lg shadow-xl w-11/12 md:w-9/12 lg:w-3/4 mt-32">
         <div className="flex justify-center py-4">
           <div className="flex bg-purple-200 rounded-full md:p-4 p-2 border-2 border-purple-300">
             <svg
