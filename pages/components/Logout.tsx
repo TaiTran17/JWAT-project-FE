@@ -20,7 +20,7 @@ export default function Logout() {
         Cookie.remove("Authorization");
         Cookie.remove("Refresh");
 
-        router.push("/#");
+        router.push("http://localhost:3001/");
       } else {
         console.error("Logout failed");
       }
@@ -30,7 +30,7 @@ export default function Logout() {
   };
 
   return (
-    <button className="text-red-600 " onClick={handleLogout}>
+    <button className="text-blue-900 " onClick={handleLogout}>
       Logout
     </button>
   );

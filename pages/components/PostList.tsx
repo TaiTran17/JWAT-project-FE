@@ -56,16 +56,14 @@ export default function PostList({ type }: pageProps) {
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:gap-8 xl:items-start xl:space-y-0">
                     <dl>
                       <dd className="flex flex-col justify-center items-center text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                        <img
+                          src={thumbnail}
+                          alt={""}
+                          className="rounded-lg w-full h-full object-cover"
+                        />
                         <time dateTime={createdAt}>
                           {formatDate(createdAt, siteMetadata.locale)}
                         </time>
-                        <Image
-                          src={thumbnail}
-                          alt={""}
-                          width={500}
-                          height={500}
-                        />
-                        <div></div>
                       </dd>
                     </dl>
                     <div className="space-y-5 xl:col-span-3">
@@ -73,13 +71,13 @@ export default function PostList({ type }: pageProps) {
                         <div>
                           <h2 className="text-2xl font-bold leading-8 tracking-tight">
                             <Link
-                              href={`/blog/${type}`}
+                              href={`/blog/${id}`}
                               className="text-gray-900 dark:text-gray-100"
                             >
                               {title}
                             </Link>
                           </h2>
-                          <div className="flex flex-wrap">
+                          <div className="flex flex-wrap mt-2">
                             {type != "company" && (
                               <Tag text={topic.topic_name} />
                             )}
@@ -106,32 +104,31 @@ export default function PostList({ type }: pageProps) {
           })}
         </ul>
       </div>
-      {page > 1 && (
-        <div className="flex justify-right text-base font-medium leading-6">
-          <button
+      <div className="flex justify-center">
+        {page > 1 && (
+          <a
             onClick={() => setPage((prevPage) => prevPage - 1)}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             aria-label="All posts"
           >
             &larr; back
-          </button>
+          </a>
+        )}
+        <div className="flex justify text-base font-medium leading-6 ml-3 mt-1">
+          {page}
         </div>
-      )}
-      <div className="flex justify text-base font-medium leading-6">
-        Page: {page}
-      </div>
 
-      {posts.length && (
-        <div className="flex justify-end text-base font-medium leading-6">
-          <button
+        {posts.length && (
+          <a
             onClick={() => setPage((prevPage) => prevPage + 1)}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="flex items-center justify-center px-3 h-8 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             aria-label="All posts"
           >
             Next &rarr;
-          </button>
-        </div>
-      )}
+          </a>
+        )}
+      </div>
+
       {/* {siteMetadata.newsletter?.provider && (
         <div className="flex items-center justify-center pt-4">
           <NewsletterForm />

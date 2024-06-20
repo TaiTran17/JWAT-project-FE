@@ -6,7 +6,10 @@ import { NextPage } from "next";
 const IndexPage: NextPage & { getLayout?: boolean } = () => {
   return (
     <>
-      <UserInfo />
+      <img
+        src="https://res.cloudinary.com/de22izcfb/image/upload/v1718901225/nwsftsfza8q2io6omgja.png"
+        alt="background"
+      />
       <PostList type={"company"} />
     </>
   );

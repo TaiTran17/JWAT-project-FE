@@ -145,3 +145,32 @@ export const getUserInfo = async (id: string) => {
     };
   }
 };
+
+export const getCurrentUser = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/user/get-user-jwt", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + Cookies.get("Authorization"),
+      },
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get current user",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get current user",
+    };
+  }
+};

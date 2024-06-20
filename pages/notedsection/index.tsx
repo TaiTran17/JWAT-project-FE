@@ -53,32 +53,30 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
           })}
         </ul>
       </div>
-      {page > 1 && (
-        <div className="flex justify-right text-base font-medium leading-6">
-          <button
+      <div className="flex justify-center">
+        {page > 1 && (
+          <a
             onClick={() => setPage((prevPage) => prevPage - 1)}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             aria-label="All posts"
           >
             &larr; back
-          </button>
+          </a>
+        )}
+        <div className="flex justify text-base font-medium leading-6 ml-3 mt-1">
+          {page}
         </div>
-      )}
-      <div className="flex justify text-base font-medium leading-6">
-        Page: {page}
-      </div>
 
-      {sectionList.length && (
-        <div className="flex justify-end text-base font-medium leading-6">
-          <button
+        {sectionList.length && (
+          <a
             onClick={() => setPage((prevPage) => prevPage + 1)}
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="flex items-center justify-center px-3 h-8 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             aria-label="All posts"
           >
             Next &rarr;
-          </button>
-        </div>
-      )}
+          </a>
+        )}
+      </div>
     </>
   );
 };

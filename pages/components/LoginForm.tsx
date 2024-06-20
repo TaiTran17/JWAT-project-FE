@@ -102,7 +102,7 @@ export const LoginForm = () => {
         </div>
         <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
           <a href="#" onClick={openModal}>
-            Forgot your password
+            Create an account
           </a>
         </div>
         <div className="px-4 pb-2 pt-4">

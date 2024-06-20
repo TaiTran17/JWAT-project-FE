@@ -47,7 +47,11 @@ export default function Blog({ blog_id }: PostProps) {
         </div>
       </div>
       <div className="w-full h-auto">
-        <img src={blog.thumbnail} alt="" className="w-full h-[500px]" />
+        <img
+          src={blog.thumbnail}
+          alt=""
+          className="w-full h-[500px] rounded-lg"
+        />
       </div>
       <div className="w-full flex flex-col justify-center items-center">
         <div className="w-3/4 h-fit block mx-10 my-5 max-h-96 font-serif text-black   p-24 uppercase text-center justify-center">
