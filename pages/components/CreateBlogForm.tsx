@@ -129,13 +129,11 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
     formData.append("thumbnail", selectedFile); // Append the File object itself
 
     const result = await createBlog(formData);
-    console.log("Check blog", result);
     if (result.success) {
       setNewBlog(result.newBlog.data);
       setFormData(result.newBlog.data); // Pass newBlog data to setFormData
       toast.success(result.message);
       nextStep(); // Move to the next step
-      nextStep();
     } else {
       toast.error(result.message);
     }
