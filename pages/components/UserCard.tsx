@@ -9,6 +9,7 @@ export default function UserCard() {
       const response = await getCurrentUser();
       const userInfo = response.data;
       setUserInfos(userInfo);
+      console.log(userInfo);
     } catch (error) {
       console.error("Error fetching user info:", error);
     }
@@ -30,7 +31,7 @@ export default function UserCard() {
           {userInfos?.username}
         </h5>
         <span className="text-sm text-gray-500 dark:text-gray-400">
-          Visual Designer
+          {userInfos?.role}
         </span>
         <a
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"

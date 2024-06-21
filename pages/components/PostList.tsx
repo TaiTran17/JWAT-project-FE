@@ -61,9 +61,6 @@ export default function PostList({ type }: pageProps) {
                           alt={""}
                           className="rounded-lg w-full h-full object-cover"
                         />
-                        <time dateTime={createdAt}>
-                          {formatDate(createdAt, siteMetadata.locale)}
-                        </time>
                       </dd>
                     </dl>
                     <div className="space-y-5 xl:col-span-3">
@@ -77,6 +74,12 @@ export default function PostList({ type }: pageProps) {
                               {title}
                             </Link>
                           </h2>
+                          <time
+                            dateTime={createdAt}
+                            className="font-medium text-lg text-gray-600 leading-6"
+                          >
+                            Date: {formatDate(createdAt, siteMetadata.locale)}
+                          </time>
                           <div className="flex flex-wrap mt-2">
                             {type != "company" && (
                               <Tag text={topic.topic_name} />
@@ -105,28 +108,22 @@ export default function PostList({ type }: pageProps) {
         </ul>
       </div>
       <div className="flex justify-center">
-        {page > 1 && (
-          <a
+        <div className="join">
+          <button
+            className="join-item btn"
             onClick={() => setPage((prevPage) => prevPage - 1)}
-            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            aria-label="All posts"
+            disabled={page > 1 ? false : true}
           >
-            &larr; back
-          </a>
-        )}
-        <div className="flex justify text-base font-medium leading-6 ml-3 mt-1">
-          {page}
-        </div>
-
-        {posts.length && (
-          <a
+            «
+          </button>
+          <button className="join-item btn">{page}</button>
+          <button
+            className="join-item btn"
             onClick={() => setPage((prevPage) => prevPage + 1)}
-            className="flex items-center justify-center px-3 h-8 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            aria-label="All posts"
           >
-            Next &rarr;
-          </a>
-        )}
+            »
+          </button>
+        </div>
       </div>
 
       {/* {siteMetadata.newsletter?.provider && (

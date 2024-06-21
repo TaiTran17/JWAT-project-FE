@@ -16,5 +16,5 @@ export function middleware(request: NextRequest) {
 
 // Matching paths configuration
 export const config = {
-  matcher: "/Homepage/:path*",
+  matcher: "/company/:path*",
 };
