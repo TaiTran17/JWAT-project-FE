@@ -120,6 +120,7 @@ export default function PostList({ type }: pageProps) {
           <button
             className="join-item btn"
             onClick={() => setPage((prevPage) => prevPage + 1)}
+            disabled={posts.length > 0 ? false : true}
           >
             »
           </button>
