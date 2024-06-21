@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 export const LoginForm = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
+
   const {
     register,
     handleSubmit,
@@ -23,11 +25,16 @@ export const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<UserInputs> = async (data) => {
+    setIsLoading(true); // Set loading state to true on form submission
+
     const formData = new FormData();
     formData.append("username", data.username);
     formData.append("password", data.password);
 
     const result = await loginAction(formData);
+
+    setIsLoading(false); // Set loading state to false after response
+
     if (result.success) {
       toast.success(result.message);
       router.push("/company");
@@ -108,9 +115,13 @@ export const LoginForm = () => {
         <div className="px-4 pb-2 pt-4">
           <button
             type="submit"
-            className="uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none"
+            disabled={isLoading} // Disable button when loading
+            className={`uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none ${
+              isLoading ? "opacity-50 cursor-wait" : "" // Change cursor and opacity when loading
+            }`}
           >
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}{" "}
+            {/* Change button text based on loading state */}
           </button>
         </div>
       </form>

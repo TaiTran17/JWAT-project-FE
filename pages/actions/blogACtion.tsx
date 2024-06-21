@@ -46,15 +46,17 @@ export const createBlog = async (newBlog: FormData) => {
   }
 };
 
-export const getBlog = async (type: string, page: number) => {
+export const getBlog = async (type: string, page: number, token?: string) => {
   try {
+    const headers: HeadersInit = {
+      Authorization: token ? `Bearer ${token}` : "",
+    };
+
     const response = await fetch(
       `http://localhost:3000/blog?type=${type}&page=${page}`,
       {
         method: "GET",
-        headers: {
-          Authorization: "Bearer " + Cookies.get("Authorization"),
-        },
+        headers: headers,
       }
     );
 
