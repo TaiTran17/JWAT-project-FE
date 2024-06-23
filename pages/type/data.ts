@@ -30,14 +30,9 @@ type Topic = {
 };
 
 type Section = {
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  isDeleted: boolean;
   id: string;
   caption: string;
-  blog: Blog;
+  blog: BlogData;
 };
 
 type Image = {
@@ -68,4 +63,15 @@ type blogInputs = {
   type: string;
   topic: string;
   thumbnail: FileList | null;
+};
+
+type BlogData = {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  thumbnail: string;
+  topic: {
+    topic_name: string;
+  };
 };

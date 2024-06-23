@@ -12,6 +12,7 @@ const siteMetadata = {
 
 interface CommentProps {
   blog_id: string;
+  // blogData: BlogData;
 }
 
 export default function Comment({ blog_id }: CommentProps) {
@@ -46,11 +47,13 @@ export default function Comment({ blog_id }: CommentProps) {
   }, [blog_id]);
 
   useEffect(() => {
-    commentsList.forEach((comment) => {
-      if (!userInfos[comment.createdBy]) {
-        fetchUserInfo(comment.createdBy);
-      }
-    });
+    if (comments) {
+      comments.forEach((comment) => {
+        if (!userInfos[comment.createdBy]) {
+          fetchUserInfo(comment.createdBy);
+        }
+      });
+    }
   }, [comments]);
 
   const handleAddComment = async () => {
@@ -69,16 +72,20 @@ export default function Comment({ blog_id }: CommentProps) {
     <ul className="bg-base-200 p-4 rounded-xl mt-10 ">
       {!commentsList.length && "No comments found."}
       {commentsList.map((commentt) => {
-        const { comment, createdBy, createdAt } = commentt;
+        const { id, comment, createdBy, createdAt } = commentt;
         const userInfo = userInfos[createdBy];
+        const isOdd = parseInt(id, 10) % 2 !== 0;
+        const chatClass = isOdd ? "chat chat-start" : "chat chat-end";
+
         return (
-          <li className="chat chat-start ml-6 mt-2">
+          <li className={`${chatClass} ml-6 mt-2`} key={id}>
             <div className="chat-image avatar">
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS chat bubble component"
-                  src={userInfo?.avatar}
-                />
+                {userInfo?.avatar ? (
+                  <img alt="Avatar" src={userInfo.avatar} />
+                ) : (
+                  <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                )}
               </div>
             </div>
             <div className="chat-header ml-2 mb-1">
