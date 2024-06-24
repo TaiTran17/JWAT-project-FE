@@ -21,8 +21,8 @@ const Blog: React.FC<BlogProps> = ({ blogData }) => {
 
   return (
     <div className="flex flex-col box-border items-center justify-center ">
-      <div className="w-3/4 h-fit block mx-10 mb-5 max-h-96 font-bold text-black p-24 uppercase text-center">
-        <div className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400 mb-5">
+      <div className="w-full h-fit block mx-10 mb-2 max-h-96 font-bold text-black p-24 uppercase text-center">
+        <div className="text-2xl font-medium leading-6 text-gray-500 dark:text-gray-400 mb-5">
           <time dateTime={blogData.createdAt}>
             {formatDate(blogData.createdAt, siteMetadata.locale)}
           </time>
@@ -33,15 +33,15 @@ const Blog: React.FC<BlogProps> = ({ blogData }) => {
           </h1>
         </div>
       </div>
-      <div className="w-full h-auto">
+      <div className="w-screen h-auto">
         <img
           src={blogData.thumbnail}
           alt=""
-          className="w-full h-[500px] rounded-lg"
+          className="w-full h-auto rounded-lg transition duration-200 ease-out transform hover:scale-110"
         />
       </div>
       <div className="w-full flex flex-col justify-center items-center">
-        <div className="w-3/4 h-fit block mx-10 my-5 max-h-96 font-serif text-black p-24 uppercase text-center justify-center">
+        <div className="w-full md:w-3/4  h-fit block mx-10 my-5 max-h-96 font-serif text-black p-24 uppercase text-center justify-center ">
           {blogData.description}
         </div>
       </div>
