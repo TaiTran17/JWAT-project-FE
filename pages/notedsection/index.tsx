@@ -2,7 +2,7 @@ import Blog from "@/pages/components/Post/blog";
 import Comment from "@/pages/components/Post/comment";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import nookies, { parseCookies } from "nookies";
 import NoteSectionComponent from "@/pages/components/noteSection";
 
@@ -16,24 +16,23 @@ const IndexPage: NextPage<IndexPageProps> & {
   const [page, setPage] = useState(1);
   const [notedSectionss, setNotedSections] = useState(sectionData);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await fetch(`http://localhost:3000/note?page=${page}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${parseCookies().Authorization}`,
-        },
-      });
+  const fetchSections = useCallback(async () => {
+    const response = await fetch(`http://localhost:3000/note?page=${page}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${parseCookies().Authorization}`,
+      },
+    });
 
-      if (response.ok) {
-        const newNotedSections = await response.json();
-
-        setNotedSections(newNotedSections.map((item: any) => item.section));
-      }
-    };
-
-    fetchPosts();
+    if (response.ok) {
+      const newNotedSections = await response.json();
+      setNotedSections(newNotedSections.map((item: any) => item.section));
+    }
   }, [page]);
+
+  useEffect(() => {
+    fetchSections();
+  }, [page, fetchSections]);
 
   return (
     <>
@@ -41,6 +40,7 @@ const IndexPage: NextPage<IndexPageProps> & {
         notedSections={notedSectionss}
         page={page}
         setPage={setPage}
+        fetchSections={fetchSections}
       ></NoteSectionComponent>
     </>
   );

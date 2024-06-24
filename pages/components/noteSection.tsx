@@ -2,6 +2,7 @@ import React from "react";
 import Image from "./Post/image";
 import { GetServerSideProps, NextPage } from "next";
 import toast from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface Section {
   id: string;
@@ -13,26 +14,31 @@ interface NoteSectionProps {
   notedSections: Section[];
   page: number;
   setPage: (page: number) => void;
+  fetchSections: () => void;
 }
 
 const NotedSectionComponent: React.FC<NoteSectionProps> = ({
   notedSections,
   page,
   setPage,
+  fetchSections,
 }) => {
   const handleRemoveNote = async (selectedSection: string) => {
     try {
+      const { Authorization } = parseCookies();
       const response = await fetch(
         `http://localhost:3000/note/delete?section_id=${selectedSection}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${Authorization}`,
           },
         }
       );
       if (response.ok) {
         toast.success("Note delete successfully.");
+        fetchSections();
       } else {
         throw new Error("Failed to delete noted section");
       }
