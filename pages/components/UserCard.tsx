@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useUserStore } from "../store/userStore";
+import Logout from "./Logout";
 
 export default function UserCard() {
   const { user, fetchUser } = useUserStore((state) => ({
@@ -37,6 +38,7 @@ export default function UserCard() {
         >
           Noted Section
         </a>
+        <Logout />
       </div>
     </div>
   );

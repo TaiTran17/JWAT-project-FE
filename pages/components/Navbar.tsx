@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import logo from "../../public/next.svg";
 import UserCard from "@/pages/components/UserCard";
 import Link from "next/link";
-import Logout from "@/pages/components/Logout";
 import { getCurrentUser, getUserInfo } from "../actions/userAction";
+import { useOutsideClick } from "../actions/outsidealearter";
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [showCard, setShowCard] = useState(false);
@@ -12,6 +12,10 @@ export default function Navbar() {
   const toggleShowCard = () => {
     setShowCard((prev) => !prev);
   };
+
+  const ref = useOutsideClick(() => {
+    toggleShowCard();
+  });
 
   const fetchUserInfo = async () => {
     try {
@@ -59,29 +63,20 @@ export default function Navbar() {
               className="cursor-pointer flex items-center"
             >
               <img
-                // src="https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png?f=webp&w=256"
                 src={userInfos?.avatar}
                 width="50"
                 height="50"
-                //className="p-2 "
-                className="w-10 rounded-full"
+                className="w-10 h-10 rounded-full object-cover"
                 alt="Rz Codes Logo"
                 data-popover-target="profile-menu"
                 onClick={toggleShowCard}
                 data-dropdown-toggle="dropdown"
               />
-              <div
-                className={`ml-2 mt-0 text-blue-900 transition-all duration-100 transform ${
-                  isVisible ? "animate-slideInFromTop" : "animate-slideOutToTop"
-                }`}
-              >
-                Welcome Back
-              </div>
             </label>
           </div>
 
           {showCard && (
-            <div className="absolute top-12">
+            <div className="absolute top-12" ref={ref}>
               <UserCard />
             </div>
           )}
@@ -138,9 +133,6 @@ export default function Navbar() {
                 >
                   Team
                 </Link>
-              </li>
-              <li className="py-2 lg:py-0 ">
-                <Logout />
               </li>
             </ul>
           </nav>

@@ -144,7 +144,9 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
       <div className="grid grid-cols-1 mt-5 mx-7">
         <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">
           Title's event
+          <span className="text-red-600"> *</span>
         </label>
+
         <input
           id="title"
           className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
@@ -152,6 +154,9 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
           placeholder="Title"
           {...register("title")}
         />
+        {errors.title && (
+          <span className="text-red-500 text-xs">{errors.title.message}</span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
@@ -171,6 +176,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
         <div className="grid grid-cols-1">
           <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">
             Event type
+            <span className="text-red-600"> *</span>
           </label>
           <select
             id="type"
@@ -179,6 +185,9 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
           >
             {typeBlogOptions}
           </select>
+          {errors.type && (
+            <span className="text-red-500 text-xs">{errors.type.message}</span>
+          )}
         </div>
       </div>
 
@@ -192,6 +201,11 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
           placeholder="Describe this event with your amazing words"
           {...register("description")}
         />
+        {errors.description && (
+          <span className="text-red-500 text-xs">
+            {errors.description.message}
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 mt-5 mx-7">
@@ -223,6 +237,11 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
               }}
               accept="image/png, image/jpeg"
             />
+            {errors.thumbnail && (
+              <span className="text-red-500 text-xs">
+                {errors.thumbnail.message}
+              </span>
+            )}
           </div>
         ) : (
           <>

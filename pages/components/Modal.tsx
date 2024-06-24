@@ -15,7 +15,7 @@ const Modal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
           {/* Modal header */}
           <div className="flex justify-between items-center bg-indigo-500 text-white px-4 py-2 rounded-t-lg">
             <div></div>
-            <h2 className="text-2xl font-semibold font-serif ">Sign in User</h2>
+            <h2 className="text-2xl font-semibold font-serif ">Sign up User</h2>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 focus:outline-none"

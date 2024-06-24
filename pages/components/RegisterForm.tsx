@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userInfoSchema } from "@/schema/userInfo";
 import { registerUser } from "@/pages/actions/userAction";
 import { toast } from "react-hot-toast";
+import { debounce } from "lodash";
 
 interface IRegisterForm {
   onClose: () => void;
@@ -100,6 +101,17 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
       reader.readAsDataURL(file);
     }
   };
+  //add debounce to the submit function
+  const debouncedSubmit = useCallback(
+    debounce((data) => handleSubmit(onSubmit)(data), 500),
+    [handleSubmit, onSubmit]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedSubmit.cancel();
+    };
+  }, [debouncedSubmit]);
 
   const handleImageClick = () => {
     fileInputRef.current?.click(); // Trigger the file input click event
@@ -112,7 +124,12 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      // onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(e) => {
+        //prevent the default form submission để ngăn chặn hành động mặc định của form
+        e.preventDefault();
+        debouncedSubmit(e);
+      }}
       className="bg-white mx-auto px-4 lg:px-6 py-8 shadow-lg flex flex-col lg:flex-col rounded-b-md"
     >
       <div className="flex flex-row">
@@ -123,6 +140,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
               className="text-neutral-800 font-bold text-lg mb-2 block font-mono"
             >
               UserName
+              <span className="text-red-600">*</span>
             </label>
 
             <input
@@ -133,7 +151,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
               {...register("username")}
             />
             {errors.username?.message && (
-              <p className="text-red-600">{errors.username?.message}</p>
+              <p className="text-red-600 text-xs">{errors.username?.message}</p>
             )}
           </div>
           <div className="mt-6">
@@ -142,6 +160,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
               className="text-neutral-800 font-bold text-lg mb-2 block font-mono"
             >
               Password
+              <span className="text-red-600">*</span>
             </label>
             <input
               type="password"
@@ -151,7 +170,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
               {...register("password")}
             />
             {errors.password?.message && (
-              <p className="text-red-600">{errors.password?.message}</p>
+              <p className="text-red-600 text-xs">{errors.password?.message}</p>
             )}
           </div>
         </div>
@@ -233,14 +252,14 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
       <div className="p-4 flex justify-center gap-x-4 rounded-b-lg">
         <button
           type="submit"
-          className="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-semibold bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
+          className="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
         >
-          Sign In
+          Sign Up
         </button>
         <button
           onClick={onClose}
           type="button"
-          className="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
+          className="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-semibold bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
         >
           Cancel
         </button>

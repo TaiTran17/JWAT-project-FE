@@ -2,15 +2,16 @@ import { loginUser } from "@/pages/actions/userAction";
 import Modal from "@/pages/components/Modal";
 import { userInfoSchema } from "@/schema/userInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import { debounce } from "lodash";
 
 export const LoginForm = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -23,25 +24,6 @@ export const LoginForm = () => {
     },
     resolver: zodResolver(userInfoSchema),
   });
-
-  const onSubmit: SubmitHandler<UserInputs> = async (data) => {
-    setIsLoading(true); // Set loading state to true on form submission
-
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("password", data.password);
-
-    const result = await loginAction(formData);
-
-    setIsLoading(false); // Set loading state to false after response
-
-    if (result.success) {
-      toast.success(result.message);
-      router.push("/company");
-    } else {
-      toast.error(result.message);
-    }
-  };
 
   const loginAction = async (formData: FormData) => {
     const userLogin = {
@@ -69,6 +51,37 @@ export const LoginForm = () => {
     });
   };
 
+  const onSubmit: SubmitHandler<UserInputs> = async (data) => {
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("username", data.username);
+    formData.append("password", data.password);
+
+    const result = await loginAction(formData);
+
+    setIsLoading(false);
+
+    if (result.success) {
+      toast.success(result.message);
+      router.push("/company");
+    } else {
+      toast.error(result.message);
+    }
+  };
+
+  //add debounce to the submit function
+  const debouncedSubmit = useCallback(
+    debounce((data) => handleSubmit(onSubmit)(data), 500),
+    [handleSubmit, onSubmit]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedSubmit.cancel();
+    };
+  }, [debouncedSubmit]);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -80,7 +93,11 @@ export const LoginForm = () => {
   return (
     <>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          //prevent the default form submission để ngăn chặn hành động mặc định của form
+          e.preventDefault();
+          debouncedSubmit(e);
+        }}
         className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto"
       >
         <div className="pb-2 pt-4">
@@ -89,7 +106,7 @@ export const LoginForm = () => {
             id="username"
             {...register("username")}
             placeholder="Username"
-            className=" block w-full p-4 text-lg rounded-sm bg-black"
+            className="block w-full p-4 text-lg rounded-sm bg-black"
           />
           {errors.username && (
             <p className="text-red-600">{errors.username.message}</p>
@@ -115,13 +132,12 @@ export const LoginForm = () => {
         <div className="px-4 pb-2 pt-4">
           <button
             type="submit"
-            disabled={isLoading} // Disable button when loading
+            disabled={isLoading}
             className={`uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none ${
-              isLoading ? "opacity-50 cursor-wait" : "" // Change cursor and opacity when loading
+              isLoading ? "opacity-50 cursor-wait" : ""
             }`}
           >
-            {isLoading ? "Signing In..." : "Sign In"}{" "}
-            {/* Change button text based on loading state */}
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </div>
       </form>
