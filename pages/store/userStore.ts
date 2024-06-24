@@ -11,6 +11,7 @@ interface User {
 interface UserStore {
   user: User | null;
   fetchUser: () => Promise<void>;
+  clearUser: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -30,4 +31,5 @@ export const useUserStore = create<UserStore>((set) => ({
       set({ user: null }); // Optionally handle error state
     }
   },
+  clearUser: () => set({ user: null }), // Method to clear user state
 }));

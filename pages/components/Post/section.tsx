@@ -40,20 +40,25 @@ const SectionComponent: React.FC<SectionProps> = ({ sectionData }) => {
 
   return (
     <div>
-      <ul className="divide-y dark:divide-gray-700">
+      <ul className="divide-y dark:divide-gray-700 ">
         {!sectionData?.length && <p>No sections found.</p>}
         {sectionData?.map((section) => (
           <li key={section.id} className="py-12">
-            <div className="prose max-w-none dark:text-gray-700 mb-5">
-              <p className="text-xl">{section.caption}</p>
+            <div className="prose max-w-none mb-10">
+              <p className="uppercase text-xl text-center leading-6 text-gray-600 font-medium">
+                {section.caption}
+              </p>
             </div>
             <Image id={section.id} />
-            <button
-              onClick={() => handleNote(section.id)}
-              className="text-white bg-gray-800 hover:bg-blue-900 px-4 py-2 rounded-md mt-2"
-            >
-              Note Section
-            </button>
+
+            <div className="w-full flex items-center justify-center">
+              <button
+                onClick={() => handleNote(section.id)}
+                className="text-white items-center bg-gray-800 hover:bg-blue-900 px-4 py-2 rounded-md mt-2"
+              >
+                Note Section
+              </button>
+            </div>
           </li>
         ))}
       </ul>
