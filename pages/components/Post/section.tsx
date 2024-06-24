@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "./image";
 import toast from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface Section {
   id: string;
@@ -13,20 +14,18 @@ interface SectionProps {
   sectionData: Section[];
 }
 
-const SectionComponent: React.FC<SectionProps> = ({ blogId, sectionData }) => {
+const SectionComponent: React.FC<SectionProps> = ({ sectionData }) => {
   const handleNote = async (selectedSectionId: string) => {
     try {
+      const { Authorization } = parseCookies();
       const response = await fetch(
-        `http://localhost:3000/noteSection/${selectedSectionId}`,
+        `http://localhost:3000/note/addnote?section_id=${selectedSectionId}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${Authorization}`,
           },
-          body: JSON.stringify({
-            section_id: selectedSectionId,
-            blog_id: blogId,
-          }),
         }
       );
       if (response.ok) {
