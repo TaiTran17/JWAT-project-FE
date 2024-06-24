@@ -2,16 +2,21 @@ import { loginUser } from "@/pages/actions/userAction";
 import Modal from "@/pages/components/Modal";
 import { userInfoSchema } from "@/schema/userInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { debounce } from "lodash";
+import { useUserStore } from "@/pages/store/userStore";
 
 export const LoginForm = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { fetchUser } = useUserStore((state) => ({
+    fetchUser: state.fetchUser,
+  }));
 
   const {
     register,
@@ -64,6 +69,7 @@ export const LoginForm = () => {
 
     if (result.success) {
       toast.success(result.message);
+      await fetchUser(); // Fetch user data after login
       router.push("/company");
     } else {
       toast.error(result.message);

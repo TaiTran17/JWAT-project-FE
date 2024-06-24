@@ -6,9 +6,10 @@ import { useRouter } from "next/router";
 interface IUserCardProps {}
 
 const UserCard: React.FC<IUserCardProps> = () => {
-  const { user, fetchUser } = useUserStore((state) => ({
+  const { user, fetchUser, clearUser } = useUserStore((state) => ({
     user: state.user,
     fetchUser: state.fetchUser,
+    clearUser: state.clearUser,
   }));
 
   const router = useRouter();
@@ -18,10 +19,6 @@ const UserCard: React.FC<IUserCardProps> = () => {
       fetchUser(); // Fetch user data only if not already fetched
     }
   }, [user, fetchUser]); // Trigger fetchUser if user state changes or fetchUser function changes
-
-  if (!user) {
-    return <div>Loading...</div>; // Optionally render loading state while fetching user data
-  }
 
   const handleLogout = async () => {
     const accessToken = Cookie.get("Authorization");
@@ -38,6 +35,8 @@ const UserCard: React.FC<IUserCardProps> = () => {
         Cookie.remove("Authorization");
         Cookie.remove("Refresh");
 
+        clearUser(); // Clear user state on logout
+
         router.push("http://localhost:3001/");
       } else {
         console.error("Logout failed");
@@ -47,8 +46,14 @@ const UserCard: React.FC<IUserCardProps> = () => {
     }
   };
 
+  console.log("Check user", user);
+
+  if (!user) {
+    return <div>Loading...</div>; // Optionally render loading state while fetching user data
+  }
+
   return (
-    <div className="user-card animate-slideInFromTop absolute w-60 top-4 -right-96 max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className="user-card animate-slideInFromTop absolute w-fit top-4 -right-96 max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <div className="flex flex-col items-center p-10">
         <img
           className="w-24 h-24 mb-3 rounded-full shadow-lg"
