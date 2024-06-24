@@ -57,11 +57,14 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
   const fetchData = async () => {
     const accessToken = Cookie.get("Authorization");
     try {
-      const response = await axios.get("http://localhost:3000/topic", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:3000/topic/getbyuser",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       setTopics(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);

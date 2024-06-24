@@ -1,66 +1,65 @@
-import { getSectionByBlogId, noteSection } from "@/pages/actions/sectionAction";
-import { useEffect, useState } from "react";
+import React from "react";
 import Image from "./image";
 import toast from "react-hot-toast";
 
-interface PostProps {
-  blog_id: string;
+interface Section {
+  id: string;
+  caption: string;
+  // Add other properties as needed
 }
 
-export default function Section({ blog_id }: PostProps) {
-  const [sections, setSections] = useState<Section[]>();
+interface SectionProps {
+  blogId: string;
+  sectionData: Section[];
+}
 
-  // const fetchBlog = async () => {
-  //   setPosts((await getBlog(type, page)).data); // Update the return type of getBlog
-  // };
-
-  const fetchSections = async () => {
+const SectionComponent: React.FC<SectionProps> = ({ blogId, sectionData }) => {
+  const handleNote = async (selectedSectionId: string) => {
     try {
-      const response = await getSectionByBlogId(blog_id);
-      setSections(response.sections);
+      const response = await fetch(
+        `http://localhost:3000/noteSection/${selectedSectionId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            section_id: selectedSectionId,
+            blog_id: blogId,
+          }),
+        }
+      );
+      if (response.ok) {
+        toast.success("Note added successfully.");
+      } else {
+        throw new Error("Failed to note section");
+      }
     } catch (error) {
-      console.error("Error fetching blog:", error);
+      console.error("Error noting section:", error);
     }
   };
-  useEffect(() => {
-    fetchSections();
-  }, [blog_id]);
-
-  const handleNote = async (selectedSection: string) => {
-    try {
-      const response = await noteSection(selectedSection);
-      toast.success("Note added successfully.");
-    } catch (error) {
-      console.error("Error note section:", error);
-    }
-  };
-
-  const sectionList = Array.isArray(sections) ? sections : [];
 
   return (
-    <>
-      <div>
-        <ul className="divide-y dark:divide-gray-700">
-          {!sectionList.length && "No sections found."}
-          {sectionList.map((section) => {
-            const { caption, id } = section;
-            return (
-              <li className="py-12">
-                <div className="prose max-w-none  dark:text-gray-700 mb-5">
-                  <p className="text-xl">{caption}</p>
-                </div>
-                <Image id={id} />
-                <button
-                  onClick={() => handleNote(id)}
-                  className="text-white bg-gray-800 hover:bg-blue-900 px-4 py-2 rounded-md mt-2"
-                >
-                  Note Section
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </>
+    <div>
+      <ul className="divide-y dark:divide-gray-700">
+        {!sectionData?.length && <p>No sections found.</p>}
+        {sectionData?.map((section) => (
+          <li key={section.id} className="py-12">
+            <div className="prose max-w-none dark:text-gray-700 mb-5">
+              <p className="text-xl">{section.caption}</p>
+            </div>
+            <Image id={section.id} />
+            <button
+              onClick={() => handleNote(section.id)}
+              className="text-white bg-gray-800 hover:bg-blue-900 px-4 py-2 rounded-md mt-2"
+            >
+              Note Section
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
-}
+};
+
+export default SectionComponent;

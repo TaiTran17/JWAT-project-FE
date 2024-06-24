@@ -3,7 +3,7 @@ import logo from "../../public/next.svg";
 import UserCard from "@/pages/components/UserCard";
 import Link from "next/link";
 import { getCurrentUser, getUserInfo } from "../actions/userAction";
-import { useOutsideClick } from "../actions/outsidealearter";
+import MenuNav from "@/pages/components/MenuNav";
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [showCard, setShowCard] = useState(false);
@@ -12,10 +12,6 @@ export default function Navbar() {
   const toggleShowCard = () => {
     setShowCard((prev) => !prev);
   };
-
-  const ref = useOutsideClick(() => {
-    toggleShowCard();
-  });
 
   const fetchUserInfo = async () => {
     try {
@@ -56,31 +52,6 @@ export default function Navbar() {
             />
           </a>
         </div>
-        <div className="flex-1 flex justify-between items-center">
-          <div className="flex text-lg font-semibold">
-            <label
-              htmlFor="menu-toggle"
-              className="cursor-pointer flex items-center"
-            >
-              <img
-                src={userInfos?.avatar}
-                width="50"
-                height="50"
-                className="w-10 h-10 rounded-full object-cover"
-                alt="Rz Codes Logo"
-                data-popover-target="profile-menu"
-                onClick={toggleShowCard}
-                data-dropdown-toggle="dropdown"
-              />
-            </label>
-          </div>
-
-          {showCard && (
-            <div className="absolute top-12" ref={ref}>
-              <UserCard />
-            </div>
-          )}
-        </div>
 
         <label htmlFor="menu-toggle" className="cursor-pointer lg:hidden block">
           <svg
@@ -99,43 +70,7 @@ export default function Navbar() {
           className="hidden lg:flex lg:items-center lg:w-auto md:justify-center w-full peer-checked:flex"
           id="menu"
         >
-          <nav>
-            <ul className="text-xl text-center items-center gap-x-5 pt-4 md:gap-x-4 lg:text-lg lg:flex lg:pt-0">
-              <li className="py-2 lg:py-0 ">
-                <Link
-                  href="/create-post"
-                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
-                >
-                  Create Blog
-                </Link>
-              </li>
-              <li className="py-2 lg:py-0 ">
-                <a
-                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
-                  href="/company"
-                >
-                  Company
-                </a>
-              </li>
-
-              <li className="py-2 lg:py-0 ">
-                <a
-                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
-                  href="/project"
-                >
-                  Projects
-                </a>
-              </li>
-              <li className="py-2 lg:py-0 ">
-                <Link
-                  href="/team"
-                  className="text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900"
-                >
-                  Team
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <MenuNav />
         </div>
       </nav>
     </>
