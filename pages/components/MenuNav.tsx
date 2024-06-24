@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import Logout from "@/pages/components/Logout";
 import UserCard from "@/pages/components/UserCard";
 import { useUserStore } from "@/pages/store/userStore";
 
@@ -15,30 +13,27 @@ const MenuNav = () => {
     fetchUser: state.fetchUser,
   }));
 
+  console.log("Check state", showCard);
+
   useEffect(() => {
     if (!user) {
       fetchUser(); // Fetch user data only if not already fetched
     }
-  }, [user, fetchUser]); // Trigger fetchUser if user state changes or fetchUser function changes
+  }, [user, fetchUser]);
 
-  if (!user) {
-    return <div>Loading...</div>; // Optionally render loading state while fetching user data
-  }
-
+  // Handle link clicks
   const handleLinkClick = (href: any) => (event: any) => {
     event.preventDefault();
-
-    // Update clicked link state
     setClickedLink(href);
-
-    // Navigate programmatically using Next.js router
-    router.push(href);
+    router.push(href); // Navigate programmatically using Next.js router
   };
 
+  // Toggle user card visibility
   const toggleShowCard = () => {
     setShowCard((prev) => !prev);
   };
 
+  // Effect to close user card when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       const userCardElement = document.querySelector(".user-card");
@@ -47,12 +42,18 @@ const MenuNav = () => {
       }
     };
 
+    // Add event listener when component mounts
     document.addEventListener("mousedown", handleClickOutside);
 
+    // Clean up the event listener when component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  if (!user) {
+    return <div>Loading...</div>; // Optionally render loading state while fetching user data
+  }
 
   return (
     <nav>
@@ -108,26 +109,28 @@ const MenuNav = () => {
           </a>
         </li>
 
-        <label
-          htmlFor="menu-toggle"
-          className="cursor-pointer flex justify-center"
-        >
-          <img
-            src={user?.avatar}
-            width="50"
-            height="50"
-            className="w-11 h-10 rounded-full"
-            alt="Rz Codes Logo"
-            data-popover-target="profile-menu"
-            onClick={toggleShowCard}
-            data-dropdown-toggle="dropdown"
-          />
-        </label>
-        {showCard && (
-          <div className="absolute top-12">
-            <UserCard />
-          </div>
-        )}
+        {/* User card toggle */}
+        <div className="relative">
+          <label
+            htmlFor="menu-toggle"
+            className="cursor-pointer flex justify-center"
+          >
+            <img
+              src={user?.avatar}
+              width="50"
+              height="50"
+              className="w-11 h-10 rounded-full"
+              alt="User Avatar"
+              onClick={toggleShowCard}
+            />
+          </label>
+          {/* Render user card if showCard is true */}
+          {showCard && (
+            <div className="absolute top-9 right-96">
+              <UserCard />
+            </div>
+          )}
+        </div>
       </ul>
     </nav>
   );
