@@ -22,7 +22,8 @@ export const useUserStore = create<UserStore>((set) => ({
           Authorization: "Bearer " + Cookie.get("Authorization"),
         },
       });
-      const userData = await response.json();
+      const data = await response.json();
+      const userData = data.metadata;
       set({ user: userData });
     } catch (error) {
       console.error("Error fetching user:", error);

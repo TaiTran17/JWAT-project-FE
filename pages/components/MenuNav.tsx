@@ -13,8 +13,6 @@ const MenuNav = () => {
     fetchUser: state.fetchUser,
   }));
 
-  console.log("Check state", showCard);
-
   useEffect(() => {
     if (!user) {
       fetchUser(); // Fetch user data only if not already fetched

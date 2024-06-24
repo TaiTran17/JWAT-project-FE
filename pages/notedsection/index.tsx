@@ -25,8 +25,10 @@ const IndexPage: NextPage<IndexPageProps> & {
     });
 
     if (response.ok) {
-      const newNotedSections = await response.json();
-      setNotedSections(newNotedSections.map((item: any) => item.section));
+      const data = await response.json();
+      //const newNotedSections = data.metadata;
+
+      setNotedSections(data.metadata.map((item: any) => item.section));
     }
   }, [page]);
 
@@ -69,8 +71,9 @@ export const getServerSideProps = async (context: any) => {
     throw new Error("Failed to fetch section data");
   }
 
-  const sections: Section[] = await sectionRes.json();
-  const sectionData = sections.map((item: any) => item.section);
+  const sections = await sectionRes.json();
+
+  const sectionData = sections.metadata.map((item: any) => item.section);
 
   // Pass data to the page via props
   return { props: { sectionData } };

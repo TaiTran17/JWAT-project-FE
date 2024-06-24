@@ -22,7 +22,7 @@ export const getImagesBySectionId = async (id: string) => {
 
     return {
       success: true,
-      data: responseData,
+      data: responseData.metadata,
     };
   } catch (error: any) {
     return {
