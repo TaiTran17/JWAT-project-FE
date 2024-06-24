@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import logo from "../../public/next.svg";
 import UserCard from "@/pages/components/UserCard";
 import Link from "next/link";
-import Logout from "@/pages/components/Logout";
 import { getCurrentUser, getUserInfo } from "../actions/userAction";
 import MenuNav from "@/pages/components/MenuNav";
 export default function Navbar() {

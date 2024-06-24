@@ -14,7 +14,6 @@ interface SectionProps {
 }
 
 const SectionComponent: React.FC<SectionProps> = ({ blogId, sectionData }) => {
-  console.log("Check sections", sectionData);
   const handleNote = async (selectedSectionId: string) => {
     try {
       const response = await fetch(
