@@ -46,8 +46,6 @@ export const addComment = async (comment: {
       body: JSON.stringify(comment),
     });
 
-    console.log(JSON.stringify(comment));
-
     const responseData = await response.json();
     if (!response.ok) {
       return {

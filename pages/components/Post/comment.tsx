@@ -1,5 +1,6 @@
 import { addComment, getCommentsByBlogId } from "@/pages/actions/commentAction";
 import { getUserInfo } from "@/pages/actions/userAction";
+import { useUserStore } from "@/pages/store/userStore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
@@ -22,10 +23,21 @@ export default function Comment({ initialComments }: CommentProps) {
   const [comments, setComments] = useState<Commentt[]>(initialComments || []);
   const [newComment, setNewComment] = useState<string>("");
 
+  const { user, fetchUser } = useUserStore((state) => ({
+    user: state.user,
+    fetchUser: state.fetchUser,
+  }));
+
+  useEffect(() => {
+    if (!user) {
+      fetchUser(); // Fetch user data only if not already fetched
+    }
+  }, [user, fetchUser]);
+
   useEffect(() => {
     const socket = io("http://localhost:3000", { transports: ["websocket"] }); // Địa chỉ của NestJS server
-
     socket.on("newComment", (newComment: Commentt) => {
+      console.log("newComment", newComment);
       setComments((prevComments) => [...prevComments, newComment]);
     });
 
@@ -34,30 +46,18 @@ export default function Comment({ initialComments }: CommentProps) {
     };
   }, []);
 
-  // const fetchComments = async () => {
-  //   try {
-  //     const blog_id = initialComments[0].blog.id;
-  //     const response = await getCommentsByBlogId(blog_id);
-  //     setComments(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching comments:", error);
-  //   }
-  // };
-
   const handleAddComment = async () => {
     try {
       const blog_id = initialComments[0].blog.id;
-      const tmpComment = { blog: blog_id, comment: newComment };
+      const tmpComment = { blog: blog_id, comment: newComment, user: user };
       await addComment(tmpComment);
       setNewComment("");
       toast.success("Comment added successfully.");
-      //fetchComments();
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-  const commentsList = Array.isArray(comments) ? comments : [];
   return (
     <>
       <p className="mt-1 text-2xl font-bold text-left text-gray-800 sm:mx-6 sm:text-2xl md:text-3xl lg:text-4xl sm:text-center sm:mx-0">
