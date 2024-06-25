@@ -117,7 +117,6 @@ const CreateBlogForm: React.FC<IProp> = ({
 
   return (
     <>
-      <div>Section Add</div>
       <div className="grid grid-cols-1 mt-5 mx-7">
         <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">
           Title's event

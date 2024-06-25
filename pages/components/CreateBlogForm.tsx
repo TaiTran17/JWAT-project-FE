@@ -65,7 +65,8 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
           },
         }
       );
-      setTopics(response.data);
+      const data = await response.data;
+      setTopics(data.metadata);
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
