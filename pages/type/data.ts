@@ -47,6 +47,7 @@ type Commentt = {
   updatedAt: string;
   updatedBy: string;
   isDeleted: boolean;
+  user: User;
   blog: Blog;
 };
 

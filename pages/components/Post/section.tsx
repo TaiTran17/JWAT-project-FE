@@ -10,7 +10,6 @@ interface Section {
 }
 
 interface SectionProps {
-  blogId: string;
   sectionData: Section[];
 }
 
