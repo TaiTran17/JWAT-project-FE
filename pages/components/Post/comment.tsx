@@ -37,7 +37,6 @@ export default function Comment({ initialComments }: CommentProps) {
   useEffect(() => {
     const socket = io("http://localhost:3000", { transports: ["websocket"] }); // Địa chỉ của NestJS server
     socket.on("newComment", (newComment: Commentt) => {
-      console.log("newComment", newComment);
       setComments((prevComments) => [...prevComments, newComment]);
     });
 
