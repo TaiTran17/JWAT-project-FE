@@ -1,6 +1,9 @@
 import { addComment, getCommentsByBlogId } from "@/pages/actions/commentAction";
 import { getUserInfo } from "@/pages/actions/userAction";
+import { useUserStore } from "@/pages/store/userStore";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { io } from "socket.io-client";
 
 function formatDate(dateString: string, locale: string) {
   const options = { year: "numeric", month: "long", day: "numeric" };
@@ -11,73 +14,58 @@ const siteMetadata = {
 };
 
 interface CommentProps {
-  blog_id: string;
   // blogData: BlogData;
+
+  initialComments: Commentt[];
 }
 
-export default function Comment({ blog_id }: CommentProps) {
-  const [comments, setComments] = useState<Commentt[]>();
-  const [userInfos, setUserInfos] = useState<{ [key: string]: User }>({});
+export default function Comment({ initialComments }: CommentProps) {
+  const [comments, setComments] = useState<Commentt[]>(initialComments || []);
   const [newComment, setNewComment] = useState<string>("");
 
-  const fetchComments = async () => {
-    try {
-      const response = await getCommentsByBlogId(blog_id);
-      setComments(response.data);
-    } catch (error) {
-      console.error("Error fetching blog:", error);
-    }
-  };
-
-  const fetchUserInfo = async (user_id: string) => {
-    try {
-      const response = await getUserInfo(user_id);
-      const userInfo = response.data;
-      setUserInfos((prevUserInfos) => ({
-        ...prevUserInfos,
-        [user_id]: userInfo,
-      }));
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
+  const { user, fetchUser } = useUserStore((state) => ({
+    user: state.user,
+    fetchUser: state.fetchUser,
+  }));
 
   useEffect(() => {
-    fetchComments();
-  }, [blog_id]);
+    if (!user) {
+      fetchUser(); // Fetch user data only if not already fetched
+    }
+  }, [user, fetchUser]);
 
   useEffect(() => {
-    if (comments) {
-      comments.forEach((comment) => {
-        if (!userInfos[comment.createdBy]) {
-          fetchUserInfo(comment.createdBy);
-        }
-      });
-    }
-  }, [comments]);
+    const socket = io("http://localhost:3000", { transports: ["websocket"] }); // Địa chỉ của NestJS server
+    socket.on("newComment", (newComment: Commentt) => {
+      setComments((prevComments) => [...prevComments, newComment]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleAddComment = async () => {
     try {
-      const tmpComment = { blog: blog_id, comment: newComment };
+      const blog_id = initialComments[0].blog.id;
+      const tmpComment = { blog: blog_id, comment: newComment, user: user };
       await addComment(tmpComment);
       setNewComment("");
-      fetchComments();
+      toast.success("Comment added successfully.");
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-  const commentsList = Array.isArray(comments) ? comments : [];
   return (
     <>
       <p className="mt-1 text-2xl font-bold text-left text-gray-800 sm:mx-6 sm:text-2xl md:text-3xl lg:text-4xl sm:text-center sm:mx-0">
         All comments for this memory
       </p>
       <ul className="bg-base-200 p-4 rounded-xl mt-10 ">
-        {!commentsList.length && "No comments found."}
-        {commentsList.map((commentt) => {
-          const { id, comment, createdBy, createdAt } = commentt;
-          const userInfo = userInfos[createdBy];
+        {!comments.length && "No comments found."}
+        {comments.map((commentt) => {
+          const { id, comment, createdAt, user } = commentt;
           const isOdd = parseInt(id, 10) % 2 !== 0;
           const chatClass = isOdd ? "chat chat-start" : "chat chat-end";
 
@@ -85,15 +73,15 @@ export default function Comment({ blog_id }: CommentProps) {
             <li className={`${chatClass} ml-6 mt-2`} key={id}>
               <div className="chat-image avatar">
                 <div className="w-10 rounded-full">
-                  {userInfo?.avatar ? (
-                    <img alt="Avatar" src={userInfo.avatar} />
+                  {user?.avatar ? (
+                    <img alt="Avatar" src={user.avatar} />
                   ) : (
                     <div className="w-10 h-10 bg-gray-200 rounded-full" />
                   )}
                 </div>
               </div>
               <div className="chat-header ml-2 mb-1">
-                {userInfo?.username}
+                {user?.username}
                 <time dateTime={createdAt} className="text-xs opacity-50 ml-3">
                   {formatDate(createdAt, siteMetadata.locale)}
                 </time>

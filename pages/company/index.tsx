@@ -37,8 +37,8 @@ const IndexPage: NextPage<IndexPageProps> & {
       );
 
       if (response.ok) {
-        const newPosts = await response.json();
-        setPosts(newPosts);
+        const data = await response.json();
+        setPosts(data.metadata);
       }
     };
 
@@ -87,11 +87,11 @@ export const getServerSideProps = async (context: any) => {
     };
   }
 
-  const posts = await response.json();
+  const data = await response.json();
 
   return {
     props: {
-      initialPosts: posts,
+      initialPosts: data.metadata,
       initialType: type,
     },
   };
