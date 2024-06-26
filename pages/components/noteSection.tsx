@@ -53,15 +53,20 @@ const NotedSectionComponent: React.FC<NoteSectionProps> = ({
         {notedSections?.map((section) => (
           <li key={section.id} className="py-12">
             <div className="prose max-w-none dark:text-gray-700 mb-5">
-              <p className="text-xl">{section.caption}</p>
+              <p className="uppercase text-xl text-center leading-6 text-gray-600 font-medium">
+                {section.caption}
+              </p>
             </div>
             <Image id={section.id} />
-            <button
-              onClick={() => handleRemoveNote(section.id)}
-              className="text-white bg-gray-800 hover:bg-blue-900 px-4 py-2 rounded-md mt-2"
-            >
-              Remove Note
-            </button>
+
+            <div className="w-full flex items-center justify-center">
+              <button
+                onClick={() => handleRemoveNote(section.id)}
+                className="text-white bg-red-500 hover:bg-red-900 px-4 py-2 rounded-md mt-2"
+              >
+                Remove Note
+              </button>
+            </div>
           </li>
         ))}
       </ul>

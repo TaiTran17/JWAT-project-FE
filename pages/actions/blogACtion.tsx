@@ -1,3 +1,4 @@
+import api from "@/pages/lib/axiosClient";
 import { blogInfoSchema } from "@/schema/blogInfo";
 import Cookie from "js-cookie";
 import Cookies from "js-cookie";
@@ -8,13 +9,8 @@ const axios = require("axios");
 export const createBlog = async (newBlog: FormData) => {
   try {
     const accessToken = Cookie.get("Authorization");
-    // const formData = new FormData();
-    // formData.append("title", title);
-    // formData.append("description", description);
-    // formData.append("topic", topic);
-    // formData.append("type", type);
-    // formData.append("thumbnail", thumbnail); // Append the file
-    const response = await axios.post(
+
+    const response = await api.post(
       "http://localhost:3000/blog/create",
       newBlog,
       {
@@ -28,7 +24,7 @@ export const createBlog = async (newBlog: FormData) => {
     if (response?.error) {
       return {
         success: false,
-        message: response.error,
+        message: response?.error,
       };
     } else {
       return {
@@ -42,6 +38,45 @@ export const createBlog = async (newBlog: FormData) => {
     return {
       success: false,
       message: error.response?.data?.message || "Error creating blog",
+    };
+  }
+};
+
+export const addSectionToBlog = async (data: any) => {
+  const accessToken = Cookie.get("Authorization");
+
+  try {
+    const response = await api.post(
+      "http://localhost:3000/section/create",
+      {
+        blog_id: data.blog_id,
+        caption: data.caption,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // return response.data;
+    if (response?.error) {
+      return {
+        success: false,
+        message: response.error,
+      };
+    } else {
+      return {
+        success: true,
+        message: "Section created successfully",
+        newBlog: response.data,
+      };
+    }
+  } catch (error: any) {
+    console.error("Error creating section:", error);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Error creating section",
     };
   }
 };

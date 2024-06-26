@@ -22,7 +22,11 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
       const refreshToken = Cookie.get("Refresh");
 
@@ -41,13 +45,11 @@ api.interceptors.response.use(
           originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
           return api(originalRequest);
         } catch (err) {
-          // Handle token refresh failure, e.g., redirect to login
           console.error("Refresh token is invalid or expired");
-          window.location.href = "/login";
+          window.location.href = "/login"; // Handle refresh token failure
         }
       } else {
-        // No refresh token, redirect to login
-        window.location.href = "/login";
+        window.location.href = "/login"; // No refresh token, redirect to login
       }
     }
     return Promise.reject(error);
