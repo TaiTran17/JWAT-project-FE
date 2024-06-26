@@ -46,8 +46,6 @@ const UserCard: React.FC<IUserCardProps> = () => {
     }
   };
 
-  console.log("Check user", user);
-
   if (!user) {
     return <div>Loading...</div>; // Optionally render loading state while fetching user data
   }
@@ -56,11 +54,11 @@ const UserCard: React.FC<IUserCardProps> = () => {
     <div className="user-card animate-slideInFromTop absolute w-fit top-4 -right-96 max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <div className="flex flex-col items-center p-10">
         <img
-          className="w-24 h-24 mb-3 rounded-full shadow-lg"
+          className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
           src={user?.avatar}
           alt="Avatar"
         />
-        <h5 className="mb-1 text-4xl font-medium text-gray-900 dark:text-white">
+        <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
           {user?.username}
         </h5>
         <span className="text-xl font-normal text-gray-500 dark:text-gray-400">

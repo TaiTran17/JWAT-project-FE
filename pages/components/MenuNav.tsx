@@ -58,6 +58,17 @@ const MenuNav = () => {
       <ul className="text-xl text-center items-center gap-x-5 pt-4 md:gap-x-4 lg:text-lg lg:flex lg:pt-0">
         <li className="py-2 lg:py-0">
           <a
+            href="/topic"
+            className={`text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900 ${
+              clickedLink === "/topic" ? "border-b-4 border-blue-900 pb-4" : ""
+            }`}
+            onClick={handleLinkClick("/topic")}
+          >
+            Topic
+          </a>
+        </li>
+        <li className="py-2 lg:py-0">
+          <a
             href="/create-post"
             className={`text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900 ${
               clickedLink === "/create-post"
@@ -117,7 +128,7 @@ const MenuNav = () => {
               src={user?.avatar}
               width="50"
               height="50"
-              className="w-11 h-10 rounded-full"
+              className="w-10 h-10 rounded-full object-cover"
               alt="User Avatar"
               onClick={toggleShowCard}
             />
