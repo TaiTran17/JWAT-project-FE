@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 const axios = require("axios");
-import Cookie from "js-cookie";
 import toast from "react-hot-toast";
 import { createBlog } from "@/pages/actions/blogACtion";
+import { useMutation } from "@tanstack/react-query";
+import Cookie from "js-cookie";
 
 interface IProp {
   nextStep: () => void;
@@ -18,7 +19,6 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [topics, setTopics] = useState([]);
-  const [newBlog, setNewBlog] = useState([]);
   const [isTopicDisabled, setIsTopicDisabled] = useState(false);
 
   const handleClose = () => {
@@ -115,14 +115,16 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
     }
   }, [watchType]);
 
-  const onSubmit: SubmitHandler<blogInputs> = async (data) => {
-    console.log("Form Data:", data); // Check if data contains expected values
-    console.log("Selected File:", selectedFile); // Check if selectedFile is populated
+  const mutation = useMutation({
+    mutationFn: (formData: FormData) => {
+      return createBlog(formData);
+    },
+  });
 
-    // Check if selectedFile is properly set before constructing formData
+  const onSubmit: SubmitHandler<blogInputs> = async (data) => {
     if (!selectedFile) {
-      console.error("No file selected!"); // Log an error if selectedFile is missing
-      return; // Exit onSubmit function early if selectedFile is missing
+      console.error("No file selected!");
+      return;
     }
 
     const formData = new FormData();
@@ -130,16 +132,21 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
     formData.append("description", data.description);
     formData.append("topic", data.topic);
     formData.append("type", data.type);
-    formData.append("thumbnail", selectedFile); // Append the File object itself
+    formData.append("thumbnail", selectedFile);
 
-    const result = await createBlog(formData);
-    if (result.success) {
-      setNewBlog(result.newBlog.data);
-      setFormData(result.newBlog.data); // Pass newBlog data to setFormData
-      toast.success(result.message);
-      nextStep(); // Move to the next step
-    } else {
-      toast.error(result.message);
+    try {
+      const result = await mutation.mutateAsync(formData);
+
+      if (result.success) {
+        setFormData(result.newBlog.metadata);
+        toast.success(result.message);
+        nextStep();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error creating blog:", error);
+      toast.error("An error occurred while creating the blog.");
     }
   };
 
@@ -296,8 +303,9 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
         <button
           type="submit"
           className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
+          disabled={mutation.isPending}
         >
-          Create
+          {mutation.isPending ? "Submitting..." : "Create"}
         </button>
       </div>
     </form>

@@ -10,8 +10,11 @@ import SectionModal from "@/pages/components/SectionModal";
 import {
   deleteAction,
   deleteBlogAction,
+  deleteSectionAction,
   getSectionByBlogId,
 } from "@/pages/actions/sectionAction";
+import { useMutation } from "@tanstack/react-query";
+import { addSectionToBlog } from "@/pages/actions/blogACtion";
 
 interface IProp {
   nextStep: () => void;
@@ -56,31 +59,26 @@ const CreateBlogForm: React.FC<IProp> = ({
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: (data: { caption: string; blog_id: string }) => {
+      return addSectionToBlog(data);
+    },
+  });
+
   const addSectionBlog = async (data: { caption: string }) => {
     try {
-      const accessToken = Cookie.get("Authorization");
+      const result = await mutation.mutateAsync({
+        caption: data.caption,
+        blog_id: formData.id,
+      });
 
-      const response = await axios.post(
-        "http://localhost:3000/section/create",
-        {
-          blog_id: formData.id,
-          caption: data.caption,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json", // Changed to application/json
-          },
-        }
-      );
+      console.log("check", result);
 
-      if (response.status === 201) {
-        const newSectionId = response.data.id;
+      if (result.success) {
+        toast.success(result.message);
         fetchSections();
-        setValue("caption", ""); // Clear the input field
-        toast.success("Section added successfully");
       } else {
-        toast.error("Failed to add section");
+        toast.error(result.message);
       }
     } catch (error) {
       console.error("Error response:", error.response); // Log the error response
@@ -93,7 +91,7 @@ const CreateBlogForm: React.FC<IProp> = ({
   };
 
   const deleteSection = async (sectionId: string) => {
-    const result = await deleteBlogAction(sectionId);
+    const result = await deleteSectionAction(sectionId);
     if (result.success) {
       toast.success(result.message);
       fetchSections();
@@ -132,7 +130,7 @@ const CreateBlogForm: React.FC<IProp> = ({
       </div>
 
       <div className="grid grid-cols-1 mt-5 mx-7">
-        <div className="min-h-screen bg-gray-100 flex justify-center items-center px-20">
+        <div className="min-h-screen bg-gray-100 flex justify-center  px-20">
           <div className="space-y-10">
             <h1 className="text-center mt-10 text-4xl font-bold">
               Add sections
@@ -152,13 +150,19 @@ const CreateBlogForm: React.FC<IProp> = ({
                   />
                   {errors.caption && (
                     <span className="text-red-500">
-                      {errors.caption.message}
+                      {errors?.caption.message}
                     </span>
                   )}
                 </div>
 
-                <div className="bg-green-400 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
-                  <button type="submit">Add</button>
+                <div className="bg-green-400 items-baseline text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                  <button
+                    type="submit"
+                    disabled={mutation.isPending}
+                    className="flex py-3 px-5 justify-center items-center h-fit"
+                  >
+                    {mutation.isPending ? "Submitting..." : "Add"}
+                  </button>
                 </div>
               </div>
             </form>

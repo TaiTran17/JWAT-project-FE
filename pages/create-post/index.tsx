@@ -11,7 +11,7 @@ interface FormData {
 }
 
 const IndexPage: NextPage & { getLayout?: boolean } = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
   const [formData, setFormData] = useState<FormData>({});
 
   const nextStep = () => setStep(step + 1);

@@ -9,17 +9,10 @@ interface StepProps {
   prevStep: () => void;
 }
 
-const Step2: React.FC<StepProps> = ({
-  formData,
-  setFormData,
-  nextStep,
-  prevStep,
-}) => {
+const Step2: React.FC<StepProps> = ({ formData, setFormData, nextStep }) => {
   const handleSetFormData = (data: any) => {
     setFormData(data);
   };
-
-  console.log("Check data step 2:", formData);
 
   return (
     <div className="flex  w-full h-fit border-black items-center justify-center  mt-36 mb-32">

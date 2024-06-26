@@ -1,69 +1,263 @@
-import Blog from "@/pages/components/Post/blog";
-import Section from "@/pages/components/Post/section";
-import Comment from "@/pages/components/Post/comment";
-import { GetServerSideProps, NextPage } from "next";
-import { useRouter } from "next/router";
-import React from "react";
-import { parseCookies } from "nookies";
+import api from "@/pages/lib/axiosClient";
+import axios from "axios";
 
-interface IndexPageProps {
-  blogData: BlogData;
-  sectionData: Section;
-}
+import Cookie from "js-cookie";
 
-const IndexPage: NextPage<IndexPageProps> & {
-  getLayout?: (page: JSX.Element, props: IndexPageProps) => JSX.Element;
-} = ({ blogData, sectionData }) => {
-  const router = useRouter();
-  const { id } = router.query;
+export const getSectionByBlogId = async (blog_id: string) => {
+  try {
+    const accessToken = Cookie.get("Authorization");
 
-  if (!id) {
-    return <div>Loading...</div>;
+    const response = await api.get(
+      `http://localhost:3000/section?blog_id=${blog_id}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    // return response.data;
+    if (response?.error) {
+      return {
+        success: false,
+        message: response?.error,
+      };
+    } else {
+      return {
+        success: true,
+        sections: response.data.metadata,
+      };
+    }
+  } catch (error: any) {
+    console.error("Error creating blog:", error);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Error creating blog",
+    };
   }
-
-  return (
-    <>
-      <Blog blogData={blogData}></Blog>
-      <Section sectionData={sectionData}></Section>
-      {/* <Comment blog_id={blogData.id}></Comment> */}
-    </>
-  );
 };
 
-// This function gets called on every request
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params;
-  const { Authorization } = parseCookies(context);
+export const deleteSectionAction = async (sectionId: string) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:3000/section/delete`,
+      {
+        params: { section_id: sectionId },
+        headers: {
+          Authorization: `Bearer ${Cookie.get("Authorization")}`,
+        },
+      }
+    );
 
-  // Fetch blog data
-  const blogRes = await fetch(
-    `http://localhost:3000/blog/getbyBlogId?blog_id=${id}`,
-    {
+    if (response?.error) {
+      return {
+        success: false,
+        message: response.error,
+      };
+    } else {
+      return {
+        success: true,
+        message: "Blog delete successfully",
+      };
+    }
+  } catch (error: any) {
+    return {
+      success: false,
+      message:
+        error.message ||
+        error.message ||
+        "An error occurred during delete section",
+    };
+  }
+};
+
+export const addImageSection = async (formData: FormData, id: string) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3000/images/upload?blog_id=${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: "Bearer " + Cookie.get("Authorization"),
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    // Handle success
+    return {
+      success: true,
+      message: "Images uploaded successfully",
+      data: response.data, // Assuming response.data contains relevant data
+    };
+  } catch (error: any) {
+    // Handle error
+    console.error("Error uploading images:", error);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Failed to upload images",
+    };
+  }
+};
+
+export const deleteImageSection = async (id: string) => {
+  try {
+    const response = await axios.patch(
+      `http://localhost:3000/images/delete?image_id=${id}`,
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + Cookie.get("Authorization"),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Handle success
+    return {
+      success: true,
+      message: "Delete images successfully",
+    };
+  } catch (error: any) {
+    // Handle error
+    console.error("Error uploading images:", error);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Failed to upload images",
+    };
+  }
+};
+
+export const getFileUpload = async (sectionId: string) => {
+  try {
+    const accessToken = Cookie.get("Authorization");
+    console.log("Cehck sectionId", sectionId);
+
+    const response = await api.get(
+      `http://localhost:3000/images?section_id=${sectionId}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    // return response.data;
+    if (response?.error) {
+      return {
+        success: false,
+        message: response?.error,
+      };
+    } else {
+      return {
+        success: true,
+        files: response.data.metadata,
+      };
+    }
+  } catch (error: any) {
+    console.error("Error getting images:", error);
+    return {
+      success: false,
+      message: error.response?.data?.message || "Error getting images",
+    };
+  }
+};
+
+export const getNotedSections = async (page: number) => {
+  try {
+    const response = await fetch(`http://localhost:3000/note?page=${page}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${Authorization}`,
+        Authorization: "Bearer " + Cookie.get("Authorization"),
       },
-    }
-  );
-  const blogData: BlogData = await blogRes.json();
+    });
 
-  // Fetch sections data
-  const sectionRes = await fetch(
-    `http://localhost:3000/section?blog_id=${id}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${Authorization}`,
-      },
-    }
-  );
-  const sectionData: SectionData[] = await sectionRes.json();
+    const responseData = await response.json();
 
-  // Pass data to the page via props
-  return { props: { blogData, sectionData } };
+    const sections = responseData.map((item: any) => item.section);
+    console.log(sections);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to get noted sections",
+      };
+    }
+
+    return {
+      success: true,
+      data: sections,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during get noted sections",
+    };
+  }
 };
 
-IndexPage.getLayout = (page, props) => {
-  return <>{page}</>;
+export const noteSection = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/note?section_id=${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + Cookie.get("Authorization"),
+        },
+        body: JSON.stringify({ id }),
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to note section",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during note section",
+    };
+  }
 };
-export default IndexPage;
+
+export const removeNote = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/note/delete?section_id=${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + Cookie.get("Authorization"),
+        },
+      }
+    );
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        message: responseData.message || "Failed to remove note",
+      };
+    }
+
+    return {
+      success: true,
+      data: responseData,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An error occurred during remove note",
+    };
+  }
+};
