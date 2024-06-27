@@ -30,9 +30,6 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
           <li className={`step ${step >= 2 ? "step-primary" : ""}`}>
             Add Section
           </li>
-          <li className={`step ${step >= 3 ? "step-primary" : ""}`}>
-            Modify Section
-          </li>
         </ul>
       </div>
       {step === 1 && (
@@ -48,14 +45,6 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
           setFormData={setFormData}
           nextStep={nextStep}
           prevStep={prevStep}
-        />
-      )}
-      {step === 3 && (
-        <Step3
-          formData={formData}
-          setFormData={setFormData}
-          prevStep={prevStep}
-          submitForm={submitForm}
         />
       )}
     </div>

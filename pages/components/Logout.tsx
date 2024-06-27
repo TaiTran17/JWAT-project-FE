@@ -16,6 +16,8 @@ export default function Logout() {
         },
       });
 
+      console.log("cehck res", response);
+
       if (response.ok) {
         Cookie.remove("Authorization");
         Cookie.remove("Refresh");

@@ -5,53 +5,76 @@ const api = axios.create({
   baseURL: "http://localhost:3000", // Your API base URL
 });
 
+// Request Interceptor
 api.interceptors.request.use(
   (config) => {
     const accessToken = Cookie.get("Authorization");
-    console.log(accessToken);
+    console.log("Access Token in Request Interceptor:", accessToken); // Log access token
+
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
+
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error("Request Interceptor Error:", error);
+    return Promise.reject(error);
+  }
 );
 
+// Response Interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
+    // Check if the error is due to an unauthorized response (401 status code)
     if (
       error.response &&
       error.response.status === 401 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
-      const refreshToken = Cookie.get("Refresh");
+      const currentRefreshToken = Cookie.get("Refresh");
 
-      if (refreshToken) {
+      if (currentRefreshToken) {
         try {
           const response = await axios.post(
             "http://localhost:3000/auth/refresh",
-            { refreshToken }
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${currentRefreshToken}`,
+              },
+            }
           );
-          const { accessToken } = response.data;
+
+          const { accessToken, refreshToken } = response.data.metadata;
+
+          // Set new tokens in cookies
           Cookie.set("Authorization", accessToken);
           Cookie.set("Refresh", refreshToken);
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
+
+          // Set new tokens in cookies
+          Cookie.set("Authorization", accessToken);
+          Cookie.set("Refresh", refreshToken);
+
+          // Update Authorization header for the new request
           originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
-          return api(originalRequest);
+
+          return api(originalRequest); // Retry the original request with new token
         } catch (err) {
-          console.error("Refresh token is invalid or expired");
-          window.location.href = "/login"; // Handle refresh token failure
+          console.error("Refresh token is invalid or expired:", err);
+          return Promise.reject(err); // Reject promise to handle error outside interceptor
         }
       } else {
-        window.location.href = "/login"; // No refresh token, redirect to login
+        console.log("No refresh token available, redirecting to login.");
+        return Promise.reject(error); // Reject promise to handle error outside interceptor
       }
     }
+
+    // For other errors, return the original error
     return Promise.reject(error);
   }
 );
