@@ -46,7 +46,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     }
   );
-  // const blogData: BlogData = await blogRes.json();
   let data = await blogRes.json();
   const blogData: BlogData = await data.metadata;
 
@@ -68,8 +67,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const data2 = await sectionRes.json();
   const sectionData: Section[] = await data2.metadata;
 
-  // const sectionData: Section[] = await sectionRes.json();
-
   // Fetch comments data
   const commentsRes = await fetch(
     `http://localhost:3000/comment/getbyblog?blog_id=${id}`,
@@ -89,7 +86,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const data3 = await commentsRes.json();
   const commentsData: Commentt[] = await data3.metadata;
 
-  // const commentsData: Commentt[] = await commentsRes.json();
   // Pass data to the page via props
   return { props: { blogData, sectionData, commentsData } };
 };
