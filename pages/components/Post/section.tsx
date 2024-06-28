@@ -2,6 +2,7 @@ import React from "react";
 import Image from "./image";
 import toast from "react-hot-toast";
 import { parseCookies } from "nookies";
+import { debounce } from "lodash";
 
 interface Section {
   id: string;
@@ -14,7 +15,7 @@ interface SectionProps {
 }
 
 const SectionComponent: React.FC<SectionProps> = ({ sectionData }) => {
-  const handleNote = async (selectedSectionId: string) => {
+  const handleNote = debounce(async (selectedSectionId: string) => {
     try {
       const { Authorization } = parseCookies();
       const response = await fetch(
@@ -35,7 +36,7 @@ const SectionComponent: React.FC<SectionProps> = ({ sectionData }) => {
     } catch (error) {
       console.error("Error noting section:", error);
     }
-  };
+  }, 300); // Debounce with 300ms delay
 
   return (
     <div>

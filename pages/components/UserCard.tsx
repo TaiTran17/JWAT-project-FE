@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useUserStore } from "../store/userStore";
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
+import { debounce } from "lodash";
 
 interface IUserCardProps {}
 
@@ -20,7 +21,7 @@ const UserCard: React.FC<IUserCardProps> = () => {
     }
   }, [user, fetchUser]); // Trigger fetchUser if user state changes or fetchUser function changes
 
-  const handleLogout = async () => {
+  const handleLogout = debounce(async () => {
     const accessToken = Cookie.get("Authorization");
     try {
       const response = await fetch("http://localhost:3000/auth/logout", {
@@ -44,7 +45,11 @@ const UserCard: React.FC<IUserCardProps> = () => {
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  };
+  }, 300); // Debounce with 300ms delay
+
+  const handleNavigateToNotedSection = debounce(() => {
+    router.push("/notedsection");
+  }, 300); // Debounce with 300ms delay
 
   if (!user) {
     return <div>Loading...</div>; // Optionally render loading state while fetching user data
@@ -64,12 +69,12 @@ const UserCard: React.FC<IUserCardProps> = () => {
         <span className="text-xl font-normal text-gray-500 dark:text-gray-400">
           Role: {user?.role}
         </span>
-        <a
+        <button
           className="w-full mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-          href="/notedsection"
+          onClick={handleNavigateToNotedSection}
         >
           Noted Section
-        </a>
+        </button>
 
         <button
           className="w-full mt-4 px-4 py-2 bg-red-500 text-white rounded-md"

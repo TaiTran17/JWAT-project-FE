@@ -17,6 +17,7 @@ const Modal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
             <div></div>
             <h2 className="text-2xl font-semibold font-serif ">Sign up User</h2>
             <button
+              title="Close Modal"
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 focus:outline-none"
             >
@@ -27,9 +28,9 @@ const Modal: React.FC<IModalProps> = ({ isOpen, onClose }) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="feather feather-x"
               >
                 <line x1="18" y1="6" x2="6" y2="18"></line>

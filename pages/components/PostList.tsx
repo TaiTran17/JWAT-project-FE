@@ -1,5 +1,7 @@
+import React from "react";
 import Link from "next/link";
 import Tag from "../components/Tag";
+import { debounce } from "lodash";
 
 const MAX_DISPLAY = 5;
 
@@ -29,6 +31,13 @@ interface PageProps {
 }
 
 const PostList: React.FC<PageProps> = ({ posts, type, page, setPage }) => {
+  // Debounce setPage function
+  const debouncedSetPage = debounce(setPage, 300);
+
+  const handlePageChange = (newPage: number) => {
+    debouncedSetPage(newPage);
+  };
+
   return (
     <>
       <div>
@@ -99,7 +108,7 @@ const PostList: React.FC<PageProps> = ({ posts, type, page, setPage }) => {
         <div className="join">
           <button
             className="join-item btn"
-            onClick={() => setPage(page - 1)}
+            onClick={() => handlePageChange(page - 1)}
             disabled={page <= 1}
           >
             «
@@ -107,7 +116,7 @@ const PostList: React.FC<PageProps> = ({ posts, type, page, setPage }) => {
           <button className="join-item btn">{page}</button>
           <button
             className="join-item btn"
-            onClick={() => setPage(page + 1)}
+            onClick={() => handlePageChange(page + 1)}
             disabled={posts?.length < MAX_DISPLAY}
           >
             »

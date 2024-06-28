@@ -26,8 +26,6 @@ const IndexPage: NextPage<IndexPageProps> & {
 
     if (response.ok) {
       const data = await response.json();
-      //const newNotedSections = data.metadata;
-
       setNotedSections(data.metadata.map((item: any) => item.section));
     }
   }, [page]);

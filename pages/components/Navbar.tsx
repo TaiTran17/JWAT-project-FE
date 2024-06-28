@@ -39,10 +39,7 @@ export default function Navbar() {
       <nav className="lg:px-16 px-6 bg-white shadow-md flex flex-wrap items-center lg:py-0 py-2 sticky top-0">
         <img src={logo} alt="" />
         <div className="flex-1 flex justify-between items-center">
-          <a
-            href="https://www.cyberlogitec.com.vn/"
-            className="flex text-lg font-semibold"
-          >
+          <a href="/company" className="flex text-lg font-semibold">
             <img
               src="https://res.cloudinary.com/de22izcfb/image/upload/v1718901618/xq1ssil2nujdyokgbmpz.png"
               width="75"
@@ -65,7 +62,12 @@ export default function Navbar() {
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
           </svg>
         </label>
-        <input className="hidden peer" type="checkbox" id="menu-toggle" />
+        <input
+          title="menu"
+          className="hidden peer"
+          type="checkbox"
+          id="menu-toggle"
+        />
         <div
           className="hidden lg:flex lg:items-center lg:w-auto md:justify-center w-full peer-checked:flex"
           id="menu"

@@ -44,7 +44,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
   };
 
   const handleCancel = () => {
-    router.push("/Homepage");
+    router.push("/company");
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -205,6 +205,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
       <div className="grid grid-cols-1 mt-5 mx-7">
         <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">
           Description
+          <span className="text-red-600"> *</span>
         </label>
         <textarea
           id="description"
@@ -222,6 +223,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
       <div className="grid grid-cols-1 mt-5 mx-7">
         <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
           Upload Photo
+          <span className="text-red-600"> *</span>
         </label>
         {selectedImage ? (
           <div className="flex items-center justify-center w-full mt-4 group">
@@ -239,7 +241,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
             </button>
             <input
               type="file"
-              ref={fileInputRef}
+              //ref={fileInputRef}
               className="hidden w-full"
               {...register("thumbnail")}
               onChange={(e) => {

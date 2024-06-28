@@ -1,27 +1,27 @@
 import { addComment, getCommentsByBlogId } from "@/pages/actions/commentAction";
-import { getUserInfo } from "@/pages/actions/userAction";
 import { useUserStore } from "@/pages/store/userStore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
+import { debounce } from "lodash";
 
 function formatDate(dateString: string, locale: string) {
   const options = { year: "numeric", month: "long", day: "numeric" };
   return new Date(dateString).toLocaleDateString(locale);
 }
+
 const siteMetadata = {
   locale: "en-US",
 };
 
 interface CommentProps {
-  // blogData: BlogData;
-
   initialComments: Commentt[];
 }
 
 export default function Comment({ initialComments }: CommentProps) {
   const [comments, setComments] = useState<Commentt[]>(initialComments || []);
   const [newComment, setNewComment] = useState<string>("");
+  const [visibleComments, setVisibleComments] = useState<number>(10);
 
   const { user, fetchUser } = useUserStore((state) => ({
     user: state.user,
@@ -30,12 +30,12 @@ export default function Comment({ initialComments }: CommentProps) {
 
   useEffect(() => {
     if (!user) {
-      fetchUser(); // Fetch user data only if not already fetched
+      fetchUser();
     }
   }, [user, fetchUser]);
 
   useEffect(() => {
-    const socket = io("http://localhost:3000", { transports: ["websocket"] }); // Địa chỉ của NestJS server
+    const socket = io("http://localhost:3000", { transports: ["websocket"] });
     socket.on("newComment", (newComment: Commentt) => {
       setComments((prevComments) => [...prevComments, newComment]);
     });
@@ -45,8 +45,13 @@ export default function Comment({ initialComments }: CommentProps) {
     };
   }, []);
 
-  const handleAddComment = async () => {
+  const handleAddComment = debounce(async () => {
     try {
+      if (!newComment.trim()) {
+        toast.error("Please enter a comment.");
+        return;
+      }
+
       const blog_id = initialComments[0].blog.id;
       const tmpComment = { blog: blog_id, comment: newComment, user: user };
       await addComment(tmpComment);
@@ -55,22 +60,24 @@ export default function Comment({ initialComments }: CommentProps) {
     } catch (error) {
       console.error("Error adding comment:", error);
     }
-  };
+  }, 300); // Debounce with 300ms delay
+
+  const handleLoadMore = debounce(() => {
+    setVisibleComments((prevVisibleComments) => prevVisibleComments + 10);
+  }, 300); // Debounce with 300ms delay
 
   return (
     <>
       <p className="mt-1 text-2xl font-bold text-left text-gray-800 sm:mx-6 sm:text-2xl md:text-3xl lg:text-4xl sm:text-center sm:mx-0">
         All comments for this memory
       </p>
-      <ul className="bg-base-200 p-4 rounded-xl mt-10 ">
+      <ul className="bg-base-200 p-4 rounded-xl mt-10">
         {!comments.length && "No comments found."}
-        {comments.map((commentt) => {
+        {comments.slice(0, visibleComments).map((commentt) => {
           const { id, comment, createdAt, user } = commentt;
-          const isOdd = parseInt(id, 10) % 2 !== 0;
-          const chatClass = isOdd ? "chat chat-start" : "chat chat-end";
 
           return (
-            <li className={`${chatClass} ml-6 mt-2`} key={id}>
+            <li className={`chat chat-start ml-6 mt-2`} key={id}>
               <div className="chat-image avatar">
                 <div className="w-10 rounded-full">
                   {user?.avatar ? (
@@ -90,6 +97,11 @@ export default function Comment({ initialComments }: CommentProps) {
             </li>
           );
         })}
+        {visibleComments < comments.length && (
+          <button className="mt-10" onClick={handleLoadMore}>
+            Load More
+          </button>
+        )}
         <div className="bg-base-200 p-4 rounded-xl mt-10">
           <div className="mb-4">
             <textarea

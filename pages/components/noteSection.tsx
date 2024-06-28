@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "./Post/image";
-import { GetServerSideProps, NextPage } from "next";
 import toast from "react-hot-toast";
 import { parseCookies } from "nookies";
+import { debounce } from "lodash";
 
 interface Section {
   id: string;
@@ -23,7 +23,7 @@ const NotedSectionComponent: React.FC<NoteSectionProps> = ({
   setPage,
   fetchSections,
 }) => {
-  const handleRemoveNote = async (selectedSection: string) => {
+  const handleRemoveNote = debounce(async (selectedSection: string) => {
     try {
       const { Authorization } = parseCookies();
       const response = await fetch(
@@ -37,15 +37,20 @@ const NotedSectionComponent: React.FC<NoteSectionProps> = ({
         }
       );
       if (response.ok) {
-        toast.success("Note delete successfully.");
+        toast.success("Note deleted successfully.");
         fetchSections();
       } else {
         throw new Error("Failed to delete noted section");
       }
     } catch (error) {
-      console.error("Error remove noted section:", error);
+      console.error("Error removing noted section:", error);
     }
-  };
+  }, 300); // Debounce with 300ms delay
+
+  const handleSetPage = debounce((newPage: number) => {
+    setPage(newPage);
+  }, 300); // Debounce with 300ms delay
+
   return (
     <div>
       <ul className="divide-y dark:divide-gray-700">
@@ -74,7 +79,7 @@ const NotedSectionComponent: React.FC<NoteSectionProps> = ({
         <div className="join">
           <button
             className="join-item btn"
-            onClick={() => setPage(page - 1)}
+            onClick={() => handleSetPage(page - 1)}
             disabled={page <= 1}
           >
             «
@@ -82,7 +87,7 @@ const NotedSectionComponent: React.FC<NoteSectionProps> = ({
           <button className="join-item btn">{page}</button>
           <button
             className="join-item btn"
-            onClick={() => setPage(page + 1)}
+            onClick={() => handleSetPage(page + 1)}
             disabled={notedSections?.length < 5}
           >
             »

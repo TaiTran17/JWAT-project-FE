@@ -24,6 +24,7 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
 
   const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(event.target.value);
+    setSelectedTopic("");
   };
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={openModal}
       >
-        create Topic
+        Create Topic
       </button>
       <CreateTopic isOpen={isModalOpen} onClose={closeModal} />
       <div className="my-4">

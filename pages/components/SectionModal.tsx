@@ -114,6 +114,7 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose, section }) => {
             Caption
           </label>
           <input
+            title="caption"
             id="title"
             className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
             type="text"
@@ -125,6 +126,7 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose, section }) => {
         <section className="overflow-auto p-4 w-full h-full flex flex-col">
           <header className=" flex flex-col justify-center items-center">
             <input
+              title="upload"
               id="hidden-input"
               type="file"
               multiple
@@ -176,6 +178,7 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose, section }) => {
                     src={URL.createObjectURL(file)}
                   />
                   <button
+                    title="delete"
                     className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
                     type="button"
                     onClick={() => handleDelete(index)}
@@ -188,9 +191,9 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose, section }) => {
                       stroke="currentColor"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                       />
                     </svg>
@@ -221,6 +224,7 @@ const SectionModal: React.FC<IModalProps> = ({ isOpen, onClose, section }) => {
                         src={url}
                       />
                       <button
+                        title="delete"
                         className="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
                         type="button"
                         onClick={() => deleteFileUploaded(id)}
