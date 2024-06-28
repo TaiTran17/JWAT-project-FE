@@ -11,8 +11,12 @@ export const mappedTypeBlogOptions: { [key in BlogOption]: string } = {
 };
 
 export const blogInfoSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  description: z.string(),
+  title: z
+    .string()
+    .min(1, { message: "Title must be longer than or equal to 5 characters" }),
+  description: z.string().min(5, {
+    message: "Description must be longer than or equal to 5 characters ",
+  }),
   type: z.enum(typeBlogOptions, {
     errorMap: () => ({ message: "Type is required" }),
   }),
