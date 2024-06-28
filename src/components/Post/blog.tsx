@@ -1,4 +1,4 @@
-import { getBlogDetail } from "@/src/util/actions/blogACtion";
+import { getBlogDetail } from "@/src/util/actions/blogAction";
 import { useEffect, useState } from "react";
 
 interface BlogProps {

@@ -12,7 +12,7 @@ import {
   getSectionByBlogId,
 } from "@/src/util/actions/sectionAction";
 import { useMutation } from "@tanstack/react-query";
-import { addSectionToBlog } from "@/src/util/actions/blogACtion";
+import { addSectionToBlog } from "@/src/util/actions/blogAction";
 
 interface IProp {
   nextStep: () => void;
