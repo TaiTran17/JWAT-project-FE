@@ -65,6 +65,12 @@ const CreateBlogForm: React.FC<IProp> = ({
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => {
+      return deleteSectionAction(id);
+    },
+  });
+
   const addSectionBlog = async (data: { caption: string }) => {
     try {
       const result = await mutation.mutateAsync({
@@ -91,7 +97,7 @@ const CreateBlogForm: React.FC<IProp> = ({
   };
 
   const deleteSection = async (sectionId: string) => {
-    const result = await deleteSectionAction(sectionId);
+    const result = await deleteMutation.mutateAsync(sectionId);
     if (result.success) {
       toast.success(result.message);
       fetchSections();
@@ -192,8 +198,11 @@ const CreateBlogForm: React.FC<IProp> = ({
                   <button onClick={() => openModal(section)}>Add</button>
                 </div>
                 <div className="bg-red-600 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
-                  <button onClick={() => deleteSection(section.id)}>
-                    Delete
+                  <button
+                    onClick={() => deleteSection(section.id)}
+                    disabled={deleteMutation.isPending}
+                  >
+                    {deleteMutation.isPending ? "Deleting..." : "Delete"}
                   </button>
                 </div>
               </div>

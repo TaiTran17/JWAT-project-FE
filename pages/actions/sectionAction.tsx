@@ -5,16 +5,8 @@ import Cookie from "js-cookie";
 
 export const getSectionByBlogId = async (blog_id: string) => {
   try {
-    const accessToken = Cookie.get("Authorization");
-
     const response = await api.get(
-      `http://localhost:3000/section?blog_id=${blog_id}`,
-
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      `http://localhost:3000/section?blog_id=${blog_id}`
     );
     // return response.data;
     if (response?.error) {
@@ -39,15 +31,9 @@ export const getSectionByBlogId = async (blog_id: string) => {
 
 export const deleteSectionAction = async (sectionId: string) => {
   try {
-    const response = await axios.delete(
-      `http://localhost:3000/section/delete`,
-      {
-        params: { section_id: sectionId },
-        headers: {
-          Authorization: `Bearer ${Cookie.get("Authorization")}`,
-        },
-      }
-    );
+    const response = await api.delete(`http://localhost:3000/section/delete`, {
+      params: { section_id: sectionId },
+    });
 
     if (response?.error) {
       return {
@@ -73,12 +59,11 @@ export const deleteSectionAction = async (sectionId: string) => {
 
 export const addImageSection = async (formData: FormData, id: string) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `http://localhost:3000/images/upload?blog_id=${id}`,
       formData,
       {
         headers: {
-          Authorization: "Bearer " + Cookie.get("Authorization"),
           "Content-Type": "multipart/form-data",
         },
       }
@@ -102,12 +87,11 @@ export const addImageSection = async (formData: FormData, id: string) => {
 
 export const deleteImageSection = async (id: string) => {
   try {
-    const response = await axios.patch(
+    const response = await api.patch(
       `http://localhost:3000/images/delete?image_id=${id}`,
       {},
       {
         headers: {
-          Authorization: "Bearer " + Cookie.get("Authorization"),
           "Content-Type": "application/json",
         },
       }
@@ -130,17 +114,8 @@ export const deleteImageSection = async (id: string) => {
 
 export const getFileUpload = async (sectionId: string) => {
   try {
-    const accessToken = Cookie.get("Authorization");
-    console.log("Cehck sectionId", sectionId);
-
     const response = await api.get(
-      `http://localhost:3000/images?section_id=${sectionId}`,
-
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      `http://localhost:3000/images?section_id=${sectionId}`
     );
     // return response.data;
     if (response?.error) {

@@ -8,14 +8,11 @@ const axios = require("axios");
 // Define the createBlog function
 export const createBlog = async (newBlog: FormData) => {
   try {
-    const accessToken = Cookie.get("Authorization");
-
     const response = await api.post(
       "http://localhost:3000/blog/create",
       newBlog,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data",
         },
       }
@@ -43,8 +40,6 @@ export const createBlog = async (newBlog: FormData) => {
 };
 
 export const addSectionToBlog = async (data: any) => {
-  const accessToken = Cookie.get("Authorization");
-
   try {
     const response = await api.post(
       "http://localhost:3000/section/create",
@@ -54,7 +49,6 @@ export const addSectionToBlog = async (data: any) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
       }

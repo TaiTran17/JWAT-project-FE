@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NextPage } from "next";
 import PostList from "@/pages/components/PostList";
 import nookies, { parseCookies } from "nookies";
+import api from "@/pages/lib/axiosClient";
 
 interface Blog {
   id: string;
@@ -26,19 +27,11 @@ const IndexPage: NextPage<IndexPageProps> & {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(
-        `http://localhost:3000/blog?type=${type}&page=${page}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${parseCookies().Authorization}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setPosts(data.metadata);
+      try {
+        const response = await api.get(`/blog?type=${type}&page=${page}`);
+        setPosts(response.data.metadata);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
       }
     };
 
@@ -71,28 +64,29 @@ export const getServerSideProps = async (context: any) => {
   const cookies = nookies.get(context);
   const token = cookies.Authorization || "";
 
-  const response = await fetch(
-    `http://localhost:3000/blog?type=${type}&page=${page}`,
-    {
-      method: "GET",
+  try {
+    const response = await api.get(`/blog?type=${type}&page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
+    });
 
-  if (!response.ok) {
+    if (!response.data) {
+      return {
+        notFound: true,
+      };
+    }
+
+    return {
+      props: {
+        initialPosts: response.data.metadata,
+        initialType: type,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching posts:", error);
     return {
       notFound: true,
     };
   }
-
-  const data = await response.json();
-
-  return {
-    props: {
-      initialPosts: data.metadata,
-      initialType: type,
-    },
-  };
 };
