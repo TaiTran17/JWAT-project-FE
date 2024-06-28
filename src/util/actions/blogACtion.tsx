@@ -8,11 +8,18 @@ const axios = require("axios");
 // Define the createBlog function
 export const createBlog = async (newBlog: FormData) => {
   try {
-    const response = await api.post("/blog/create", newBlog, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const accessToken = Cookie.get("Authorization");
+
+    const response = await api.post(
+      "http://localhost:3000/blog/create",
+      newBlog,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     // return response.data;
     if (response?.error) {
       return {
@@ -23,7 +30,7 @@ export const createBlog = async (newBlog: FormData) => {
       return {
         success: true,
         message: "Blog created successfully",
-        newBlog: response.data.metadata,
+        newBlog: response.data,
       };
     }
   } catch (error: any) {
@@ -36,15 +43,18 @@ export const createBlog = async (newBlog: FormData) => {
 };
 
 export const addSectionToBlog = async (data: any) => {
+  const accessToken = Cookie.get("Authorization");
+
   try {
     const response = await api.post(
-      "/section/create",
+      "http://localhost:3000/section/create",
       {
         blog_id: data.blog_id,
         caption: data.caption,
       },
       {
         headers: {
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
       }
@@ -73,6 +83,10 @@ export const addSectionToBlog = async (data: any) => {
 
 export const getBlog = async (type: string, page: number, token?: string) => {
   try {
+    const headers: HeadersInit = {
+      Authorization: token ? `Bearer ${token}` : "",
+    };
+
     const response = await api.get(`/blog?type=${type}&page=${page}`);
 
     if (!response.data) {
@@ -84,7 +98,7 @@ export const getBlog = async (type: string, page: number, token?: string) => {
 
     return {
       success: true,
-      data: response.data.metadata,
+      data: response.data,
     };
   } catch (error: any) {
     return {
@@ -96,18 +110,19 @@ export const getBlog = async (type: string, page: number, token?: string) => {
 
 export const getBlogDetail = async (id: string) => {
   try {
-    const response = await api.get(`/blog/getbyBlogId?blog_id=${id}`);
+    const response = await api.get(
+      `http://localhost:3000/blog/getbyBlogId?blog_id=${id}`
+    );
 
     if (!response.data) {
       return {
-        success: false,
-        message: response.data.message || "Failed to get blog detail",
+        success: response.data.message || "Failed to get blog detail",
       };
     }
 
     return {
       success: true,
-      data: response.data.metadata,
+      data: response.data,
     };
   } catch (error: any) {
     return {

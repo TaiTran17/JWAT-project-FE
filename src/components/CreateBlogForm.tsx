@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 const axios = require("axios");
 import toast from "react-hot-toast";
-import { createBlog } from "@/src/util/actions/blogACtion";
+import { createBlog } from "@/src/util/actions/blogAction";
 import { useMutation } from "@tanstack/react-query";
 import Cookie from "js-cookie";
 
