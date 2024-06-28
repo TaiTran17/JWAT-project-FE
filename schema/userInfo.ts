@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const MAX_FILE_SIZE = 285 * 1024 * 1024; // 2MB
+
 export const userInfoSchema = z.object({
   username: z
     .string()

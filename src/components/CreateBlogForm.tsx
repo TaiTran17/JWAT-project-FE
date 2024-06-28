@@ -1,4 +1,5 @@
 import { blogInfoSchema, mappedTypeBlogOptions } from "@/schema/blogInfo";
+import { MAX_FILE_SIZE } from "@/schema/userInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -30,7 +31,18 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      setSelectedFile(file); // store the selected file
+      if (file.size > MAX_FILE_SIZE) {
+        setError("thumbnail", {
+          type: "manual",
+          message: "File size should be less than 2MB",
+        });
+        event.target.value = ""; // Clear the file input
+        setSelectedFile(null);
+        setSelectedImage(null);
+        return;
+      }
+
+      setSelectedFile(file); // Store the selected file
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result as string);
@@ -38,7 +50,6 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
       reader.readAsDataURL(file);
     }
   };
-
   const handleImageClick = () => {
     fileInputRef.current?.click(); // Trigger the file input click event
   };
@@ -93,6 +104,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
     handleSubmit,
     formState: { errors },
     setValue,
+    setError,
     watch,
   } = useForm<blogInputs>({
     defaultValues: {
@@ -135,7 +147,7 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
     formData.append("thumbnail", selectedFile);
 
     try {
-      const result = await mutation.mutateAsync(formData);
+      const result: any = await mutation.mutateAsync(formData);
 
       if (result.success) {
         setFormData(result.newBlog.metadata);
@@ -226,36 +238,43 @@ const CreateBlogForm: React.FC<IProp> = ({ nextStep, setFormData }) => {
           <span className="text-red-600"> *</span>
         </label>
         {selectedImage ? (
-          <div className="flex items-center justify-center w-full mt-4 group">
-            <img
-              src={selectedImage}
-              alt="Selected"
-              className="w-full h-64 object-cover"
-              onClick={handleImageClick}
-            />
-            <button
-              onClick={handleClose}
-              className="relative h-auto -top-32 right-2 text-gray-500 hover:text-gray-700 text-2xl"
-            >
-              &times;
-            </button>
-            <input
-              type="file"
-              //ref={fileInputRef}
-              className="hidden w-full"
-              {...register("thumbnail")}
-              onChange={(e) => {
-                handleImageUpload(e);
-                setValue("thumbnail", e.target.files); // update avatar value
-              }}
-              accept="image/png, image/jpeg"
-            />
-            {errors.thumbnail && (
-              <span className="text-red-500 text-xs">
-                {errors.thumbnail.message}
-              </span>
+          <>
+            <div className="flex items-center justify-center w-full mt-4 group">
+              <img
+                src={selectedImage}
+                alt="Selected"
+                className="w-full h-64 object-cover"
+                onClick={handleImageClick}
+              />
+              <button
+                onClick={handleClose}
+                className="relative h-auto -top-32 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                &times;
+              </button>
+              <input
+                type="file"
+                //ref={fileInputRef}
+                className="hidden w-full"
+                {...register("thumbnail")}
+                onChange={(e) => {
+                  handleImageUpload(e);
+                  setValue("thumbnail", e.target.files); // update avatar value
+                }}
+                accept="image/png, image/jpeg"
+              />
+              {errors.thumbnail && (
+                <span className="text-red-500 text-xs">
+                  {errors.thumbnail.message}
+                </span>
+              )}
+            </div>
+            {errors.thumbnail?.message && (
+              <p className="text-red-600 text-xs">
+                {errors.thumbnail?.message}
+              </p>
             )}
-          </div>
+          </>
         ) : (
           <>
             <div className="flex items-center justify-center w-full">

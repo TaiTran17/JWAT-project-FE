@@ -50,8 +50,8 @@ const UserCard: React.FC<IUserCardProps> = () => {
   }
 
   return (
-    <div className="user-card animate-slideInFromTop absolute w-fit top-4 -right-96 max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="flex flex-col items-center p-10">
+    <div className="user-card animate-slideInFromTop fixed right-0 top-16 w-fit h-fit max-w-lg bg-white  rounded-lg shadow ">
+      <div className="flex flex-col items-center p-10 md:p-4">
         <img
           className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
           src={user?.avatar}

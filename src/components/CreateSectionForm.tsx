@@ -219,14 +219,7 @@ const CreateBlogForm: React.FC<IProp> = ({
           className="w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
           onClick={handleCancel}
         >
-          Cancel
-        </button>
-
-        <button
-          onClick={nextStep}
-          className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
-        >
-          Create
+          Back to Homepage
         </button>
       </div>
 

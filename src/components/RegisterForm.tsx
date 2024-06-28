@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userInfoSchema } from "@/schema/userInfo";
+import { userInfoSchema, MAX_FILE_SIZE } from "@/schema/userInfo";
 import { registerUser } from "@/src/util/actions/userAction";
 import { toast } from "react-hot-toast";
 import { debounce } from "lodash";
@@ -22,6 +22,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
     handleSubmit,
     formState: { errors },
     setValue, // add setValue
+    setError,
   } = useForm<UserInputs>({
     defaultValues: {
       username: "",
@@ -93,7 +94,18 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
     const file = event.target.files?.[0];
 
     if (file) {
-      setSelectedFile(file); // store the selected file
+      if (file.size > MAX_FILE_SIZE) {
+        setError("avatar", {
+          type: "manual",
+          message: "File size should be less than 2MB",
+        });
+        event.target.value = ""; // Clear the file input
+        setSelectedFile(null);
+        setSelectedImage(null);
+        return;
+      }
+
+      setSelectedFile(file); // Store the selected file
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImage(reader.result as string);
@@ -101,6 +113,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
       reader.readAsDataURL(file);
     }
   };
+
   //add debounce to the submit function
   const debouncedSubmit = useCallback(
     debounce((data) => handleSubmit(onSubmit)(data), 500),
@@ -183,31 +196,36 @@ const RegisterForm: React.FC<IRegisterForm> = ({ onClose }) => {
             User's Avatar
           </label>
           {selectedImage ? (
-            <div className="flex items-center justify-center w-full mt-4 group">
-              <img
-                src={selectedImage}
-                alt="Selected"
-                className="rounded-full w-32 h-32 object-cover"
-                onClick={handleImageClick}
-              />
-              <button
-                onClick={handleClose}
-                className="relative h-auto -top-14 right-2 text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                &times;
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                {...register("avatar")}
-                onChange={(e) => {
-                  handleImageUpload(e);
-                  setValue("avatar", e.target.files); // update avatar value
-                }}
-                accept="image/png, image/jpeg"
-              />
-            </div>
+            <>
+              <div className="flex items-center justify-center w-full mt-4 group">
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  className="rounded-full w-32 h-32 object-cover"
+                  onClick={handleImageClick}
+                />
+                <button
+                  onClick={handleClose}
+                  className="relative h-auto -top-14 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  &times;
+                </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  {...register("avatar")}
+                  onChange={(e) => {
+                    handleImageUpload(e);
+                    setValue("avatar", e.target.files); // update avatar value
+                  }}
+                  accept=".png, .jpeg,.gif"
+                />
+              </div>
+              {errors.avatar?.message && (
+                <p className="text-red-600 text-xs">{errors.avatar?.message}</p>
+              )}
+            </>
           ) : (
             <>
               <div className="flex items-center justify-center w-full">

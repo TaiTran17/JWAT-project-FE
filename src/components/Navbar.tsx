@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import logo from "@/public/next.svg";
 import { getCurrentUser, getUserInfo } from "../util/actions/userAction";
 import MenuNav from "@/src/components/MenuNav";
+import React from "react";
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [showCard, setShowCard] = useState(false);
@@ -67,7 +68,7 @@ export default function Navbar() {
           id="menu-toggle"
         />
         <div
-          className="hidden lg:flex lg:items-center lg:w-auto md:justify-center w-full peer-checked:flex"
+          className="hidden lg:flex lg:items-center lg:w-auto sm:flex justify-center w-full peer-checked:flex"
           id="menu"
         >
           <MenuNav />

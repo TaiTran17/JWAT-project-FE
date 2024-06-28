@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import UserCard from "@/src/components/UserCard";
 import { useUserStore } from "@/src/util/store/userStore";
+import React from "react";
+import { debounce } from "lodash";
 
 const MenuNav = () => {
   const [clickedLink, setClickedLink] = useState(null);
@@ -52,6 +54,25 @@ const MenuNav = () => {
   if (!user) {
     return <div>Loading...</div>; // Optionally render loading state while fetching user data
   }
+
+  const handleLogout = debounce(async () => {
+    try {
+      const response = await api.post("/auth/logout", {});
+
+      if (response.data) {
+        Cookie.remove("Authorization");
+        Cookie.remove("Refresh");
+
+        clearUser(); // Clear user state on logout
+
+        router.push("http://localhost:3001/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  }, 300); // Debounce with 300ms delay
 
   return (
     <nav>
@@ -117,9 +138,31 @@ const MenuNav = () => {
             Team
           </a>
         </li>
+        <li className="md:hidden py-2">
+          <a
+            href="/team"
+            className={`text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900 ${
+              clickedLink === "/team" ? "border-b-4 border-blue-900 pb-4" : ""
+            }`}
+            onClick={handleLinkClick("/notedsection")}
+          >
+            Noted Section
+          </a>
+        </li>
+        <li className="md:hidden py-2">
+          <a
+            href="/team"
+            className={`text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900 ${
+              clickedLink === "/team" ? "border-b-4 border-blue-900 pb-4" : ""
+            }`}
+            onClick={handleLogout}
+          >
+            Log out
+          </a>
+        </li>
 
         {/* User card toggle */}
-        <div className="relative">
+        <li className="py-4 lg:py-0">
           <label
             htmlFor="menu-toggle"
             className="cursor-pointer flex justify-center"
@@ -135,11 +178,11 @@ const MenuNav = () => {
           </label>
           {/* Render user card if showCard is true */}
           {showCard && (
-            <div className="absolute top-9 right-96">
+            <div className="absolute top-96 right-96">
               <UserCard />
             </div>
           )}
-        </div>
+        </li>
       </ul>
     </nav>
   );
