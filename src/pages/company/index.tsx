@@ -76,7 +76,6 @@ export const getServerSideProps = async (context: any) => {
         notFound: true,
       };
     }
-
     return {
       props: {
         initialPosts: response.data.metadata,
