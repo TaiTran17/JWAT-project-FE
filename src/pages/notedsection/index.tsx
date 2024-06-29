@@ -68,7 +68,6 @@ export const getServerSideProps = async (context: any) => {
     const sectionData = sectionRes.data.metadata.map(
       (item: any) => item.section
     );
-
     // Pass data to the page via props
     return { props: { sectionData } };
   } catch (error) {
