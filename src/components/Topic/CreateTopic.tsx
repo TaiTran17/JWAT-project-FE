@@ -62,35 +62,13 @@ const CreateTopic: React.FC<IModalProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center w-auto">
       <div className="relative p-4 rounded w-fit bg-white">
         {/* Modal header */}
-        <div className="flex justify-between items-center bg-indigo-500 text-white px-4 py-2 rounded-t-lg">
+        <div className="flex justify-center bg-indigo-500 text-white px-4 py-2 rounded-md">
           <h2 className="text-2xl font-semibold">Create Topic</h2>
-          <button
-            type="button"
-            title="Close Create Topic Modal"
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="feather feather-x"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
         </div>
         {/* Modal body */}
         <form onSubmit={handleSubmit}>
           <div className="my-4">
-            <label htmlFor="topicType" className="block mb-1">
+            <label htmlFor="topicType" className="block mb-1 font-bold">
               Select a Type:
             </label>
             <select
@@ -107,7 +85,7 @@ const CreateTopic: React.FC<IModalProps> = ({ isOpen, onClose }) => {
             </select>
           </div>
           <div className="my-4">
-            <label htmlFor="topicName" className="block mb-1">
+            <label htmlFor="topicName" className="block mb-1 font-bold">
               Topic Name:
             </label>
             <input
@@ -119,12 +97,22 @@ const CreateTopic: React.FC<IModalProps> = ({ isOpen, onClose }) => {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Create Topic
-          </button>
+
+          <div className="flex gap-8">
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Create
+            </button>
+            <button
+              type="submit"
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -138,12 +138,14 @@ const UserTable: React.FC<UserTableProps> = ({ topicId }) => {
 
   return (
     <>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={openModal}
-      >
-        Add User
-      </button>
+      <div className="flex w-full items-center justify-center py-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={openModal}
+        >
+          Add User
+        </button>
+      </div>
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -170,7 +172,7 @@ const UserTable: React.FC<UserTableProps> = ({ topicId }) => {
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-4 py-2 border-b border-gray-200"
+                  className="px-4 py-2 border-b border-gray-200 hover"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

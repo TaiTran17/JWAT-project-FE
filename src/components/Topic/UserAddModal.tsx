@@ -35,7 +35,6 @@ const UserAddModal: React.FC<IModalProps> = ({
           },
         }
       );
-      console.log("Response:", response);
       if (response.data) {
         toast.success(response.data.message);
         onUserAdded(); // Gọi lại khi thêm người dùng thành công
@@ -77,13 +76,13 @@ const UserAddModal: React.FC<IModalProps> = ({
   return (
     <>
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center w-auto ">
-        <div className="relative p-4 rounded w-fit">
+        <div className="relative p-4 rounded w-fit bg-white">
           {/* Modal header */}
-          <div className="flex justify-between items-center bg-indigo-500 text-white px-4 py-2 rounded-t-lg">
-            <div></div>
+          <div className="flex justify-between bg-indigo-500 text-white px-4 py-2 rounded-lg">
             <h2 className="text-2xl font-semibold font-serif ">
               Add User Into Topic
             </h2>
+            <div></div>
             <button
               type="button"
               title="Close Add User Modal"
@@ -111,6 +110,7 @@ const UserAddModal: React.FC<IModalProps> = ({
           <input
             placeholder="Add Users eg: John, Piyush, Jane"
             onChange={handleInputChange}
+            className="my-4 input input-bordered w-full"
           ></input>
 
           <div className="h-64 overflow-y-auto border p-4">
