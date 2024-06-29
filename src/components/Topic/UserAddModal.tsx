@@ -76,7 +76,7 @@ const UserAddModal: React.FC<IModalProps> = ({
   return (
     <>
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center w-auto ">
-        <div className="relative p-4 rounded w-fit bg-white">
+        <div className="relative p-4 rounded w-1/3 bg-white">
           {/* Modal header */}
           <div className="flex justify-between bg-indigo-500 text-white px-4 py-2 rounded-lg">
             <h2 className="text-2xl font-semibold font-serif ">
