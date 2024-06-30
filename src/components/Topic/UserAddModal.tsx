@@ -36,7 +36,10 @@ const UserAddModal: React.FC<IModalProps> = ({
         }
       );
       if (response.data) {
-        toast.success(response.data.message);
+        if (response.data.message === "User already added")
+          toast.error(response.data.message);
+        else toast.success(response.data.message);
+        console.log("User added to topic:", response.data.message);
         onUserAdded(); // Gọi lại khi thêm người dùng thành công
         onClose();
       } else {

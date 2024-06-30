@@ -65,19 +65,12 @@ const IndexPage: NextPage & { getLayout?: boolean } = () => {
   return (
     <>
       <section className="py-8 flex flex-col items-center justify-center border-solid border-blue-400 shadow-md rounded-md">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={openTopicModal}
-        >
-          Create Topic
-        </button>
-
         <div className="flex justify-evenly items-baseline gap-8 py-8 h-28">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={openTopicModal}
           >
-            Add User
+            Create Topic
           </button>
           <div className="my-4">
             <label htmlFor="topicId" className="text-base font-medium">
