@@ -8,7 +8,7 @@ interface IModalProps {
 const UserList: React.FC<IModalProps> = ({ user, handleFunction }) => {
   return (
     <>
-      <div onClick={handleFunction} color="black">
+      <div color="black">
         <table className="table">
           <tbody>
             <tr>
@@ -31,7 +31,12 @@ const UserList: React.FC<IModalProps> = ({ user, handleFunction }) => {
                 </div>
               </td>
               <th>
-                <button className="btn btn-ghost btn-xs text-base">Add</button>
+                <button
+                  onClick={handleFunction}
+                  className="btn btn-ghost btn-xs text-base"
+                >
+                  Add
+                </button>
               </th>
             </tr>
           </tbody>
