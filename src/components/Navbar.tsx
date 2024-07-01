@@ -68,7 +68,7 @@ export default function Navbar() {
           id="menu-toggle"
         />
         <div
-          className="hidden lg:flex lg:items-center lg:w-auto sm:flex justify-center w-full peer-checked:flex"
+          className="hidden lg:items-center lg:w-auto lg:flex justify-center w-full peer-checked:flex"
           id="menu"
         >
           <MenuNav />

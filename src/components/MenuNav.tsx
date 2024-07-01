@@ -139,7 +139,7 @@ const MenuNav = () => {
             Team
           </a>
         </li>
-        <li className="md:hidden py-2">
+        <li className="lg:hidden py-2">
           <a
             href="/team"
             className={`text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900 ${
@@ -150,7 +150,7 @@ const MenuNav = () => {
             Noted Section
           </a>
         </li>
-        <li className="md:hidden py-2">
+        <li className="lg:hidden py-2">
           <a
             href="/team"
             className={`text-blue-900 hover:pb-4 hover:border-b-4 hover:border-blue-900 ${
