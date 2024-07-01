@@ -145,14 +145,17 @@ const CreateBlogForm: React.FC<IProp> = ({
               Add sections
             </h1>
 
-            <form onSubmit={handleSubmit(addSectionBlog)}>
+            <form
+              onSubmit={handleSubmit(addSectionBlog)}
+              className="w-82 md:w-auto"
+            >
               <div
                 id="section"
-                className="flex items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500"
+                className="flex items-center p-3 space-x-2 md:space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition text-sm  duration-500 md:p-6 md:text-xl md:max-w-fit "
               >
-                <div className="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
+                <div className="flex bg-gray-100 p-3 w-60 space-x-4 rounded-lg md:p-4 md:w-auto">
                   <input
-                    className="bg-gray-100 outline-none"
+                    className="bg-gray-100 outline-none h-6 md:h-auto"
                     type="text"
                     placeholder="Article name or keyword..."
                     {...register("caption")}

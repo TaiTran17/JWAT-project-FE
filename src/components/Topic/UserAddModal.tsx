@@ -79,10 +79,10 @@ const UserAddModal: React.FC<IModalProps> = ({
   return (
     <>
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center w-auto ">
-        <div className="relative p-4 rounded w-1/3 bg-white">
+        <div className="relative p-4 rounded md:w-1/3 w-fit bg-white">
           {/* Modal header */}
-          <div className="flex justify-between bg-indigo-500 text-white px-4 py-2 rounded-lg">
-            <h2 className="text-2xl font-semibold font-serif ">
+          <div className="flex justify-between items-center bg-indigo-500 text-white px-4 py-2 rounded-lg">
+            <h2 className="md:text-2xl font-semibold text-sm font-serif ">
               Add User Into Topic
             </h2>
             <div></div>
@@ -113,7 +113,7 @@ const UserAddModal: React.FC<IModalProps> = ({
           <input
             placeholder="Add Users eg: John, Piyush, Jane"
             onChange={handleInputChange}
-            className="my-4 input input-bordered w-full"
+            className=" my-2 input input-bordered w-full  h-10 md:my-4 "
           ></input>
 
           <div className="h-64 overflow-y-auto border p-4">

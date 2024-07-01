@@ -33,7 +33,7 @@ const UserList: React.FC<IModalProps> = ({ user, handleFunction }) => {
               <th>
                 <button
                   onClick={handleFunction}
-                  className="btn btn-ghost btn-xs text-base"
+                  className="btn btn-ghost btn-xs text-sm md:text-base"
                 >
                   Add
                 </button>
