@@ -33,7 +33,7 @@ const SectionComponent: React.FC<SectionProps> = ({ sectionData }) => {
   return (
     <div>
       <ul className="divide-y dark:divide-gray-700 ">
-        {!sectionData?.length && <p>No sections found.</p>}
+        {!sectionData?.length}
         {sectionData?.map((section) => (
           <li key={section.id} className="py-12">
             <div className="prose max-w-none mb-10">

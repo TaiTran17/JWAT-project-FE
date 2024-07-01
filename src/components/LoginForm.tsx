@@ -112,7 +112,7 @@ export const LoginForm = () => {
             id="username"
             {...register("username")}
             placeholder="Username"
-            className="block w-full p-4 text-lg rounded-sm bg-black"
+            className="block w-full p-4 text-lg rounded-sm bg-gray-500"
           />
           {errors.username && (
             <p className="text-red-600">{errors.username.message}</p>
@@ -124,13 +124,13 @@ export const LoginForm = () => {
             {...register("password")}
             id="password"
             placeholder="Password"
-            className="block w-full p-4 text-lg rounded-sm bg-black"
+            className="block w-full p-4 text-lg rounded-sm bg-gray-500"
           />
           {errors.password && (
             <p className="text-red-600">{errors.password.message}</p>
           )}
         </div>
-        <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
+        <div className="text-right text-gray-400 hover:underline hover:text-gray-700">
           <a href="#" onClick={openModal}>
             Create an account
           </a>
@@ -139,7 +139,7 @@ export const LoginForm = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none ${
+            className={`uppercase block w-full p-4 text-lg rounded-full bg-gray-900 hover:bg-black focus:outline-none ${
               isLoading ? "opacity-50 cursor-wait" : ""
             }`}
           >

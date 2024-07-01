@@ -102,12 +102,15 @@ export const loginUser = async (user: {
     return {
       success: true,
       data: response.data,
-      message: response.data.message || "Login successfull",
+      message: response.data.message || "Login successful",
     };
   } catch (error: any) {
     return {
       success: false,
-      message: error.message || "An error occurred during sign in",
+      message:
+        error.response?.data?.message ||
+        error.message ||
+        "An error occurred during sign in",
     };
   }
 };
