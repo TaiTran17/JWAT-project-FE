@@ -5,24 +5,27 @@ const Login = () => {
   return (
     <>
       <section className="min-h-screen flex items-stretch text-white">
-        <div className="lg:flex w-1/2 hidden bg-gray-500 relative items-center bg-custom-image">
-          <div className=" w-full px-24 z-1">
-            <h1 className="text-5xl font-bold text-left tracking-wide">
-              Keep it special
-            </h1>
-            <p className="text-3xl my-4">
-              Capture your personal memory in unique way, anywhere
-            </p>
-          </div>
+        <div className="lg:flex w-1/2 hidden bg-gray-50 relative items-center ">
+          <img
+            className="absolute inset-0 w-full h-full object-cover"
+            src="https://res.cloudinary.com/de22izcfb/image/upload/v1719799496/qjj2vbqwzp4tj9ucmorg.png"
+            alt=""
+          />
+
           <div className="bottom-0 absolute p-4 text-center right-0 left-0 flex justify-center space-x-4"></div>
         </div>
 
-        <div className="lg:w-1/2 w-full flex items-center justify-center text-center md:px-16 px-0 z-0 bg-custom-bg">
-          <div className="absolute lg:hidden z-10 inset-0 bg-gray-500 bg-no-repeat bg-cover items-center bg-custom-image-1">
-            <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
+        <div className="lg:w-1/2 w-full flex items-center justify-center text-center md:px-16 px-0 z-0 bg-gray-50">
+          <div className="absolute lg:hidden z-10 inset-0 bg-gray-500 bg-no-repeat bg-cover items-center ">
+            <div className="absolute bg-white opacity-60 inset-0 z-0"></div>
           </div>
           <div className="w-full py-6 z-20">
-            <h1 className="my-6 ">
+            <img
+              className="w-60 mx-auto mb-6"
+              src="https://res.cloudinary.com/de22izcfb/image/upload/v1719799666/ux0tyfqddejtep4obouj.webp"
+              alt=""
+            />
+            {/* <h1 className="my-6 ">
               <svg
                 viewBox="0 0 247 31"
                 className="w-auto h-7 sm:h-8 inline-flex"
@@ -42,7 +45,7 @@ const Login = () => {
                   //   fill="#000"
                 ></path>
               </svg>
-            </h1>
+            </h1> */}
 
             <LoginForm />
           </div>

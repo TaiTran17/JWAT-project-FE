@@ -75,7 +75,7 @@ export default function Comment({ initialComments }: CommentProps) {
         All comments for this memory
       </p>
       <ul className="bg-base-200 p-4 rounded-xl mt-10">
-        {!comments.length && "No comments found."}
+        {!comments.length}
         {comments.slice(0, visibleComments).map((commentt) => {
           const { id, comment, createdAt, user } = commentt;
 
@@ -101,7 +101,7 @@ export default function Comment({ initialComments }: CommentProps) {
           );
         })}
         {visibleComments < comments.length && (
-          <button className="mt-10" onClick={handleLoadMore}>
+          <button className="mt-10 ml-10" onClick={handleLoadMore}>
             Load More
           </button>
         )}

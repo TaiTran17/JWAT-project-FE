@@ -4,6 +4,7 @@ import UserCard from "@/src/components/UserCard";
 import { useUserStore } from "@/src/util/store/userStore";
 import React from "react";
 import { debounce } from "lodash";
+import api from "../util/lib/axiosClient";
 
 const MenuNav = () => {
   const [clickedLink, setClickedLink] = useState(null);
